@@ -2,18 +2,19 @@ import React, { Component } from 'react';
 import { Graph } from 'react-d3-graph';
 import './App.css';
 
- let message="no node"
  let data = {
-  nodes: [{ id: 'Harry' }, { id: 'Sally' }, { id: 'Alice' }],
-  links: [{ source: 'Harry', target: 'Sally' }, { source: 'Harry', target: 'Alice' }]
+  nodes: [{ id: '1',color: 'green',name:'Harry' }, { id: '2',color: 'green',name:'Sally' }, { id: '3',color: 'green',name:'Alice' }],
+  links: [{ source: '1', target: '2' }, { source: '1', target: '3' }]
 };
+let data2 = {}
   
 const myConfig = {
   nodeHighlightBehavior: true,
   node: {
-      color: 'green',
+      
       size: 120,
-      highlightStrokeColor: 'blue'
+      highlightStrokeColor: 'blue',
+      labelProperty: 'name'
   },
   link: {
       highlightColor: 'lightblue'
@@ -59,40 +60,28 @@ class App extends Component {
     this.setState({
     textvalue:e.target.value
     })
+
   }
   handleAddTodoItem(){
-    let newNode ={id:this.state.textvalue}
-    let temp = newNode
-    console.log(JSON.stringify(this.state.value[0][1]))
-    console.log((JSON.stringify(newNode)))
-    let check 
-    for(let ele in this.state.value[0]){
-      if ((JSON.stringify(newNode)) === JSON.stringify(this.state.value[0][ele])){
-        
-        check = false
-        console.log(check)         
-      }
-      else{
-        check = true
-        console.log(check)
-      }
+    if (data.nodes[0].color=='green'){
+      data.nodes[0].color = 'red'
     }
-    if(check == true){
-      this.state.value[0].push(newNode)  
+    //this.state.value[0].push(newNode)  
       this.setState(
         this.state
       )
       this.state
-    }
-        
-      
-    console.log(this.state.value)
-    
-    
+  
      
   }
-  
   render() {
+    let show = document.getElementById("Canvas")
+    if(data.nodes.length == 0){
+      
+    }
+    else{
+      //console.log(data.nodes.length)
+    }
     let { value }  = this.state;
     return (
        <div className="App">
@@ -106,9 +95,9 @@ class App extends Component {
            <button id="FullScreen-button" onClick={this.decrease}>Full screen</button>
            <button id="Clear-Canvas"> Clear Canvas </button>
 
-          <div className="Canvas" align="center">Canvas area
+          <div id="Canvas" align="center" >Canvas area
           
-          < Graph id="graph-id"
+            < Graph id="graph-id"
               data={data}
               config={myConfig}
               onClickNode={onClickNode}
@@ -117,11 +106,9 @@ class App extends Component {
               onMouseOutNode={onMouseOutNode}
               onMouseOverLink={onMouseOverLink}
               onMouseOutLink={onMouseOutLink}/>;
-           </div>
-
+          </div> 
        </div>
     );
   }
 }
-
 export default App;
