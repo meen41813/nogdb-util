@@ -4,7 +4,7 @@ import Graph from 'react-graph-vis'
 
 let graph = {
   nodes: [
-      {id: 1,  label: 'Node 1'},
+      {id: 1, label: 'Node 1'},
       {id: 2, label: 'Node 2'},
       {id: 3, label: 'Node 3'},
       {id: 4, label: 'Node 4'},
@@ -61,17 +61,43 @@ class App extends Component {
     super(props)
     this.state= {
       graph: graph,
-      textvalue : " ",
+      textvalue: " ",
+      srcvalue: " ",
+      dscvalue: " "
       
     }
     this.handleAddTodoItem = this.handleAddTodoItem.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleSrcChange = this.handleSrcChange.bind(this);
+    this.handleDscChange = this.handleDscChange.bind(this);
+    this.handleAddEdge = this.handleAddEdge.bind(this);
+  }
+
+  handleSrcChange(e){
+    this.setState({
+      srcvalue:e.target.value
+    })
+  }
+  handleDscChange(e){
+    this.setState({
+      dscvalue:e.target.value
+    })
   }
   handleChange(e){
     this.setState({
-    textvalue:e.target.value
+      textvalue:e.target.value
     })
-
+  }
+  handleAddEdge(){
+    let newEdge ={from: this.state.srcvalue,to: this.state.dscvalue}
+    let copy3 =this.state.graph.nodes.slice()
+    let copy4 =this.state.graph.edges.slice()
+    copy4.push(newEdge)
+    console.log(copy4)
+    this.setState(
+      {graph:{nodes:copy3,edges:copy4}}
+    )
+    
   }
   handleAddTodoItem(){
 
@@ -125,18 +151,22 @@ class App extends Component {
 
    // console.log(value)
     return (
-       <div id="App">
+      <div id="App">
          
-         <p className="App-intro"> NogDB Graph UI </p> 
-         <div className="Top-Box" align="center">Limit</div>
-         <p className="Display-msg">Displaying ... nodes, ... relationships. </p>
-           <br/>
-           <input type="text" placeholder="Inputhere" className="text" onChange={this.handleChange} />
+        <p className="App-intro"> NogDB Graph UI </p> 
+        <div className="Top-Box" align="center">Limit</div>
+        <p className="Display-msg">Displaying ... nodes, ... relationships. </p>
+          <br/>
+          <input type="text" placeholder="Inputhere" className="text" onChange={this.handleChange} />
            
-           <button id="Addnode-button" onClick={this.handleAddTodoItem}>Add node</button>
+          <button id="Addnode-button" onClick={this.handleAddTodoItem}>Add node</button>
+
+          <input type="src-Edge" placeholder="Src-Edge..." className="src_Edgetxt" onChange={this.handleSrcChange}/>
+          <input type="dsc-Edge" placeholder="Dsc-Edge..." className="dsc_Edgetxt" onChange={this.handleDscChange}/>
+          <button id="Edge-button" onClick={this.handleAddEdge}>Create edge2</button>
            
-           <button id="FullScreen-button" onClick={this.decrease}>Full screen</button>
-           <button id="Clear-Canvas"> Clear Canvas </button>
+          <button id="FullScreen-button" onClick={this.decrease}>Full screen</button>
+          <button id="Clear-Canvas"> Clear Canvas </button>
 
           <div id="Canvas" align="center" style={{height: '600px'}}>Canvas area
             <Graph graph={this.state.graph} options={this.state.options} events={this.state.events} />
