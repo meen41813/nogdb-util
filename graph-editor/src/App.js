@@ -4,46 +4,48 @@ import Graph from 'react-graph-vis'
 
 let graph = {
   nodes: [
-      {id: 1, label: 'Node 1'},
-      {id: 2, label: 'Node 2'},
-      {id: 3, label: 'Node 3'},
-      {id: 4, label: 'Node 4'},
-      {id: 5, label: 'Node 5'}
+      {id: "1", label: 'Node 1'},
+      {id: "2", label: 'Node 2'},
+      {id: "3", label: 'Node 3'},
+      {id: "4", label: 'Node 4'},
+      {id: "5", label: 'Node 5'}
     ],
   edges: [
-      {from: 1, to: 2},
-      {from: 1, to: 3},
-      {from: 2, to: 4},
-      {from: 2, to: 5}
+      {from: "1", to: "2"},
+      {from: "1", to: "3"},
+      {from: "2", to: "4"},
+      {from: "2", to: "5"}
     ]
 };
 const options = {
-    /*groups: {
+    groups: {
       test: {color:{background:'red'}}
-    },*/
+    },
     layout: {
-      hierarchical: true
+      hierarchical: false
     },
     edges: {
       color:{
-        color: "blue",
         hover: "blue",
         highlight: "yellow"
       }
     },
-    /*nodes: {
+    nodes: {
       color:{
-        color: "blue",
         hover: {
           border: "blue"
         },
         highlight:{
           border:"yellow"
         } 
-      }
-    },*/
+      },
+      
+    },
+    
     interaction:{
-      hover:true  
+      hover:true  ,
+      selectable: true,
+      selectConnectedEdges: true
     },
     manipulation:{
       enabled: true    
@@ -52,9 +54,16 @@ const options = {
 
 const events = {
   select: function(event) {
-      var { nodes, edges } = event;
+    var { nodes, edges } = event;
+    /*console.log("Selected nodes:");
+    console.log(nodes);
+    console.log("Selected edges:");
+    console.log(edges);*/
+  },
+  doubleClick: function(event){
+    //console.log(event)
   }
-};
+  };
 
 class App extends Component {
   constructor(props){
@@ -90,66 +99,95 @@ class App extends Component {
   }
   handleAddEdge(){
     let newEdge ={from: this.state.srcvalue,to: this.state.dscvalue}
+    //console.log(newEdge)
     let copy3 =this.state.graph.nodes.slice()
     let copy4 =this.state.graph.edges.slice()
-    copy4.push(newEdge)
-    console.log(copy4)
-    this.setState(
-      {graph:{nodes:copy3,edges:copy4}}
-    )
+   
     
-  }
-  handleAddTodoItem(){
-
-    let newNode ={id:this.state.textvalue,label:this.state.textvalue}
-    let copy1 =this.state.graph.nodes.slice()
-    let copy2 =this.state.graph.edges.slice()
-    let check 
-    //console.log(graph.nodes[1])
-    for(let ele in copy1){
-      //  console.log(ele)
-      if ((JSON.stringify(newNode)) === JSON.stringify(copy1[ele])){
-
+    let check
+    for(let ele in copy4){
+      //console.log(JSON.stringify(copy4[ele]))
+      if ((JSON.stringify(newEdge.from)) === JSON.stringify(copy4[ele].from) && (JSON.stringify(newEdge.to)) === JSON.stringify(copy4[ele].to) ){
         check = false
-        
-        break         
+        break        
+      }
+      else{     
+        check = true
+      }
+    }
+    //console.log(check)
+    //console.log(newEdge)
+    let checkHave1,checkHave2
+    for(let ele in copy3){
+      //console.log(JSON.stringify(newEdge.from))
+      //console.log( JSON.stringify(copy3[ele].id))
+      if((JSON.stringify(newEdge.from)) == JSON.stringify(copy3[ele].id) ){
+        checkHave1 = true
+        break
       }
       else{
-      
-        check = true
-        
+        checkHave1 = false
       }
     }
-
-    if(check == true){
-      copy1.push(newNode)  
-      //console.log(this.state.graph.edges)
-      console.log(copy1)
-      this.setState(
-        {graph:{nodes:copy1,edges:copy2}}
-      )
-      
-      
-
+    for(let ele in copy3){  
+      //console.log( JSON.stringify(copy3[ele].id))
+      if((JSON.stringify(newEdge.to)) == JSON.stringify(copy3[ele].id) ){
+        checkHave2 = true
+        break
+      }
+      else{
+        checkHave2 = false
+      }
     }
+    //console.log(check)
+    //console.log(checkHave1)
+    //console.log(checkHave2)
+    if (check == true && checkHave1 == true && checkHave2 == true){
+      copy4.push(newEdge) 
+      this.setState(
+        {graph:{nodes:copy3,edges:copy4}}
+      )
+    }
+    //console.log(graph.edges)
+    //console.log(copy4)
+  }
     
-   
-
-
+    
+       
     
   
-     
+  handleAddTodoItem(){
+      //console.log(this.state.graph.nodes)
+      
+      let newNode ={id:this.state.textvalue,label:this.state.textvalue}
+      //console.log(this.state.graph.nodes.length)
+      let copy1 =this.state.graph.nodes.slice()
+      //console.log(copy1)
+      let copy2 =this.state.graph.edges.slice()
+      let check 
+      //console.log(this.state.graph.nodes)
+     // console.log(copy1)
+       
+      for(let ele in copy1){     
+        if ((JSON.stringify(newNode)) === JSON.stringify(copy1[ele])){
+          check = false      
+          break         
+        }
+        else{ 
+          check = true           
+        }
+      }     
+      //console.log(check)
+      if(check == true || check == undefined){
+        copy1.push(newNode)  
+        this.setState(
+          {graph:{nodes:copy1,edges:copy2}}       
+        )
+        //console.log(this.state.graph.nodes)
+     // console.log(copy1)
+    } 
   }
   render() {
-    /*let show = document.getElementById("Canvas")
-    if(graph.nodes.length == 0){
-      
-    }
-    else{
-      //console.log(data.nodes.length)
-    }*/
-
-   // console.log(value)
     return (
       <div id="App">
          
@@ -169,7 +207,11 @@ class App extends Component {
           <button id="Clear-Canvas"> Clear Canvas </button>
 
           <div id="Canvas" align="center" style={{height: '600px'}}>Canvas area
-            <Graph graph={this.state.graph} options={this.state.options} events={this.state.events} />
+            <Graph 
+              graph={this.state.graph} 
+              options={options} 
+              events={events} 
+            />        
             {console.log(this.state.graph)}
             
           </div> 
