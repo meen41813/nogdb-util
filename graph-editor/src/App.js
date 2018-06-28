@@ -161,8 +161,8 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      graph: graphDB,
-      prevGraph: graphDB,
+      graph: graphCanvas,
+     // prevGraph: graphCanvas,
       textvalue: " ",
       srcvalue: " ",
       dscvalue: " ",
@@ -316,9 +316,9 @@ class App extends Component {
     })
   }
   toggleShowMenu = () => {
-    this.setState(prevState => ({
-      showMenu: !prevState.showMenu
-    }))
+    this.setState({
+      showMenu: !this.state.showMenu
+    })
   }
   handleFullscreen = () => {
     $('#Canvas').addClass('CanvasFullScreen')
@@ -347,34 +347,37 @@ class App extends Component {
     })
   }
   handleIncoming = () => {
-    this.setState(prevState => {
-      const newGraph = { nodes: [], edges: [] };
-      for (let ele3 in prevState.graph.nodes) {
-        if (prevState.graph.nodes[ele3].id === prevState.nodeID) {
-          newGraph.nodes.push(prevState.graph.nodes[ele3])
-        }
+    //console.log(this.state.graph.nodes)
+    /*for (let ele3 in graphDB.nodes) {
+      //console.log(this.state.nodeID)
+      if (graphDB.nodes[ele3].id === this.state.nodeID) {
+        this.state.graph.nodes.push(graphDB.nodes[ele3])
       }
-      for (let ele in prevState.graph.edges) {
-        if (prevState.graph.edges[ele].to === prevState.nodeID) {
-          newGraph.edges.push(prevState.graph.edges[ele])
-        }
-
-      } //console.log(newGraph.edges)
-
-      for (let ele in newGraph.edges) {
-        for (let ele2 in prevState.graph.nodes) {
-          if (newGraph.edges[ele].from === prevState.graph.nodes[ele2].id || prevState.graph.nodes[ele2].id === prevState.nodeID)
-            newGraph.nodes.push(prevState.graph.nodes[ele2])
-
-        }
+    }*/
+    for (let eleDB in graphDB.edges) {
+      /*if(this.state.graph.edges[eleCan].from !== graphDB.edges[eleDB].from && this.state.graph.edge[eleCan].to !== graphDB.edge[eleDB].to ){
+         this.state.graph.edges.push(graphDB.edges[eleDB])
+      }*/
+      if (graphDB.edges[eleDB].to === this.state.nodeID) {         
+        this.state.graph.edges.push(graphDB.edges[eleDB])          
       }
+    }
+    
+    
 
+     
+    
+    /*for (let ele in newGraph.edges) {
+      for (let ele2 in prevState.graph.nodes) {
+        if (newGraph.edges[ele].from === prevState.graph.nodes[ele2].id || prevState.graph.nodes[ele2].id === prevState.nodeID)
+          newGraph.nodes.push(prevState.graph.nodes[ele2])
 
-      return {
-        graph: newGraph,
-        prevGraph: prevState.graph
-      };
-    });
+      }
+    }*/
+    this.setState({
+      graph: this.state.graph,
+      //prevGraph: prevState.graph
+    })
 
 
   }
@@ -511,12 +514,12 @@ class App extends Component {
                       //console.log(event);
                       this.handleNodeID(event.nodes);
                       this.toggleShowMenu();
-                      //console.log(event.nodes)
+                      console.log(event.nodes)
                     }).bind(this),
                     deselectNode: (function (event) {
                       console.log(event),
                         this.toggleShowMenu();
-                      this.setToPreviousGraph();
+                     
 
                     }).bind(this),
                     showPopup: (function (event) {
