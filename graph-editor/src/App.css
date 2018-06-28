@@ -7,22 +7,125 @@
   height: 80px;
 }
 
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
-}
 
 .App-title {
   font-size: 1.5em;
 }
 
 .App-intro {
-  font-size: large;
+  font-size:70%;
+  text-align:left;
+  padding:1%;
+  border:1px solid black;
+  margin:0;
+}
+.Top-Box {
+  widows: 100%;
+  height:40px;
+  border:1px solid black;
+  margin:0;
+}
+.Display-msg {
+  float:left;
+  font-size:70%;
+  margin:2%;
+  display:inline-block;
 }
 
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+#Addnode-button{
+  align:right;
+  font-size:medium;
+}
+#Addnode-modal{
+  font-size:medium;
+}
+#modal-next-button{
+  align:right;
+  font-size:medium;
+}
+#modal-cancel-button{
+  align:right;
+  font-size:medium;
+}
+#FullScreen-button{
+  align:right;
+  font-size:medium;
+}
+#Clear-Canvas{
+  align:right;
+  font-size:medium;
+  float:clear;
+}
+#Edge-button{
+  font-size:medium;
+}
+#cancel-edge{
+  font-size:medium;
+}
+#Edge-modal{
+  font-size:medium;
+}
+.Canvas {
+  text-align:center;
+  height:500px;
+  border:1px solid black;
+
+}
+.CanvasFullScreen {
+  test-align:center;
+  height:800px;
+  border:1px solid black;
+}
+#his-button {
+  font-size:medium;
+}
+#Modal-header{
+  position:relative;
+  top:-9%;
+  height:40%;
+  margin-right:0;
+  border:1px solid black;
+}
+#hidemodal-button{
+  float: right;
+}
+#modal-middle-div{
+  position:relative;
+  height:40%;
+  top:-10%;
+  border:1px solid black;
+}
+#modal-bottom-div{
+  position:relative;
+  height:35%;
+  top:-10%;
+  border:1px solid black;
+}
+#edge-top-div {
+  position:relative;
+  top:-9%;
+  height:40%;
+  margin-right:0;
+  border:1px solid black;
+}
+#edge-middle-div {
+  position:relative;
+  height:40%;
+  top:-10%;
+  border:1px solid black;
+}
+#edge-bottom-div {
+  position:relative;
+  height:35%;
+  top:-10%;
+  border:1px solid black;
+}
+#select-id{
+  width:100px;
+}
+.Nodetext {
+  width:70%;
+}
+#section {
+  float:right;
 }
