@@ -3,37 +3,41 @@ import Modal from 'react-modal';
 import Graph from 'react-graph-vis'
 import $ from 'jquery'
 import './App.css';
-import { inherits } from 'util';
-const customStyle = {
-  content: {
-    posittion: 'absolute',
-    top: '20px',
-    left: '40px',
-    right: '40px',
-    bottom: '40px',
-    marginRight: '15%',
-    marginLeft: '15%',
-    marginTop: '15%',
-    marginBottom: '15%'
-  }
-};
-const customCreateEdgeModal = {
-  content: {
-    position: 'absolute',
-    top: '20px',
-    left: '40px',
-    right: '40px',
-    bottom: '40px',
-    marginRight: '15%',
-    marginLeft: '15%',
-    marginTop: '15%',
-    marginBottom: '15%'
-  }
-};
-let Nodenumber;
-let Relationnumber;
-let NodeValue;
+import { SIGBREAK } from 'constants';
+ const customStyle = { 
+   content : {
+     posittion:'absolute',
+     top    : '20px',
+     left   : '40px',
+     right  : '40px',
+     bottom : '40px',
+     marginRight  : '15%',
+     marginLeft   : '15%',
+     marginTop    : '15%',
+     marginBottom : '15%' 
+   }
+ } ;
+ const customCreateEdgeModal = {
+    content : {
+      position:'absolute',
+      top   : '20px',
+      left  : '40px',
+      right : '40px',
+      bottom : '40px',
+      marginRight : '15%',
+      marginLeft  : '15%',
+      marginTop   : '15%',
+      marginBottom: '15%'
+    }
+ };
+ let Nodenumber;
+ let Relationnumber;
+ let NodeValue;
+ let data = {
+  nodes: [{ id: 'Harry' }, { id: 'Sally' }, { id: 'Alice' }],
+  links: [{ source: 'Harry', target: 'Sally' }, { source: 'Harry', target: 'Alice' }]
 
+};
 let graphDB = {
   nodes: [
     { id: "1", label: 'Bill', group: 'A' },
@@ -89,8 +93,7 @@ let graphDB = {
     { from: "20", to: "1" }
   ]
 };
-
-let graphCanvas = {
+ let graphCanvas = {
   nodes: [
     { id: "1", label: 'Bill', group: 'A' },
     { id: "2", label: 'Queen', group: 'A' },
@@ -105,14 +108,7 @@ let graphCanvas = {
     { from: "4", to: "2" }
   ]
 };
-// let graph3 = {
-//   nodes: [
 
-//   ],
-//   edges: [
-
-//   ]
-// };
 const options = {
   groups: {
     A: { color: { background: 'red', border: 'red' }, },
@@ -157,30 +153,33 @@ const options = {
   }
 };
 
+
+
 class App extends Component {
-  constructor(props) {
+  constructor(props){
     super(props)
-    this.state = {
+    this.state= {
       graph: graphCanvas,
-     // prevGraph: graphCanvas,
-      textvalue: " ",
+      // prevGraph: graph1,
+      textvalue :" ",
       srcvalue: " ",
       dscvalue: " ",
-      //clear:[data],
-      isActive: false,
-      isActive2: false,
+      clear:[data],
+      isActive:false,
+      isActive2:false,
+      isEditNodeActive:false,
+      isDeleteNodeActivate:false,
       page: 1,
-      showMenu: false,
-      isFullscreen: false,
-      nodeID: " ",
-
-
+      showMenu : false,
+      isFullscreen:false,
+      nodeID :" ",
+  
+      
     }
-    this.handleAddTodoItem = this.handleAddTodoItem.bind(this);
+    this.handleAddbuttonToCanvas = this.handleAddbuttonToCanvas.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSrcChange = this.handleSrcChange.bind(this);
     this.handleDscChange = this.handleDscChange.bind(this);
-    this.handleDelTodoItem = this.handleAddTodoItem.bind(this);
     this.handleAddEdge = this.handleAddEdge.bind(this);
     this.handleClearCanvas = this.handleClearCanvas.bind(this);
     this.handleNextPage = this.handleNextPage.bind(this);
@@ -190,368 +189,447 @@ class App extends Component {
     this.handleIncoming = this.handleIncoming.bind(this);
     this.handleOutcoming = this.handleOutcoming.bind(this);
     this.setToPreviousGraph = this.setToPreviousGraph.bind(this);
+    this.handleRemoveNode = this.handleRemoveNode.bind(this);
+    this.AddToDatabase = this.AddToDatabase.bind(this);
 
   }
-  handleChange(nodeName) {
-    this.setState({
-      textvalue: nodeName.target.value
-    })
-  }
-  handleSrcChange(srcEdge) {
-    this.setState({
-      srcvalue: srcEdge.target.value
-    })
-  }
-  handleDscChange(dscEdge) {
-    this.setState({
-      dscvalue: dscEdge.target.value
-    })
-  }
-  handleAddTodoItem() {
-    let newNode = { id: this.state.textvalue, label: this.state.textvalue }
-    let nodeCopy = this.state.graph.nodes.slice()
-    let edgeCopy = this.state.graph.edges.slice()
-    let checkRepeat
-    //console.log(graph.nodes[1])
-    for (let ele in nodeCopy) {
-      //  console.log(ele)
-      if ((JSON.stringify(newNode)) === JSON.stringify(nodeCopy[ele])) {
-        checkRepeat = false
-        break
-      }
-      else {
-        checkRepeat = true
-      }
+    handleChange(e){
+      this.setState({
+        textvalue:e.target.value
+      })
     }
-    if (checkRepeat == true || checkRepeat == undefined) {
-      nodeCopy.push(newNode)
-      //console.log(this.state.graph.edges)
-      //console.log(copy1)
-      this.setState(
-        { graph: { nodes: nodeCopy, edges: edgeCopy } }
-      )
+    handleSrcChange(e){
+      this.setState({
+        srcvalue:e.target.value
+      })
     }
-  }
-  handleAddEdge() {
-    let newEdge = { from: this.state.srcvalue, to: this.state.dscvalue }
-    //console.log(newEdge)
-    let nodeCopy = this.state.graph.nodes.slice()
-    let edgeCopy = this.state.graph.edges.slice()
-    let checkRepeat
-    for (let ele in edgeCopy) {
-      if ((JSON.stringify(newEdge.from)) === JSON.stringify(edgeCopy[ele].from) && (JSON.stringify(newEdge.to)) === JSON.stringify(edgeCopy[ele].to)) {
-        checkRepeat = false
-        break
-      }
-      else {
-        checkRepeat = true
-      }
+    handleDscChange(e){
+      this.setState({
+        dscvalue:e.target.value
+      })
     }
-    let checkNodeRealFrom, checkNodeRealTo
-    for (let ele in nodeCopy) {
-      if ((JSON.stringify(newEdge.from)) == JSON.stringify(nodeCopy[ele].id)) {
-        checkNodeRealFrom = true
-        break
-      }
-      else {
-        checkNodeRealFrom = false
-      }
-    }
-    for (let ele in nodeCopy) {
-      if ((JSON.stringify(newEdge.to)) == JSON.stringify(nodeCopy[ele].id)) {
-        checkNodeRealTo = true
-        break
-      }
-      else {
-        checkNodeRealTo = false
-      }
-    }
-    if (checkRepeat == true && checkNodeRealFrom == true && checkNodeRealTo == true) {
-      edgeCopy.push(newEdge)
-      this.setState(
-        { graph: { nodes: nodeCopy, edges: edgeCopy } }
-      )
+    
+    
+    handleAddbuttonToCanvas(){
+
+      let newNode ={id:this.state.textvalue,label:this.state.textvalue}
+      let copy1 =this.state.graph.nodes.slice()
+      let copy2 =this.state.graph.edges.slice()
+      let check 
+      //console.log(graph.nodes[1])
+      for(let ele in copy1){
+        //  console.log(ele)
+        if ((JSON.stringify(newNode)) === JSON.stringify(copy1[ele])){
+  
+          check = false
+          
+          break         
+        }
+        else{
+        
+          check = true
+          
+        }
+      } 
+      if(check == true || check == undefined){
+        copy1.push(newNode)  
+        //console.log(this.state.graph.edges)
+        console.log(copy1)
+        this.setState(
+          {graph:{nodes:copy1,edges:copy2}}
+        )
+        
+      } 
     }
 
-  }
-  handleClearCanvas() {
+
+
+
+    AddToDatabase(){
+
+      //let newNode ={id:this.state.textvalue,label:this.state.textvalue}
+      let newNode =[{id: "21", label: 'shizuka', group: 'A'},{id: "20", label: 'Herry', group: 'D'}]
+      
+      // let copy1 =this.state.graph.nodes.slice()
+      // let copy2 =this.state.graph.edges.slice()
+      let check ,check2
+      //console.log(graph.nodes[1])
+        for(let ele2 in newNode){
+          //console.log(JSON.stringify(graphDB.nodes))
+          //console.log(JSON.stringify(newNode[ele2]))
+          //console.log()
+          if(JSON.stringify(graphDB.nodes).includes(JSON.stringify(newNode[ele2]))===false){
+            graphDB.nodes.push(newNode[ele2]) 
+          }
+         
+          
+        }
+        console.log(graphDB.nodes)
+       
+      
+        //  console.log(ele)
+        
+      
+      //console.log(graphDB) 
+      
+      
+    }
+    handleAddEdge(){
+      let newEdge ={from: this.state.srcvalue,to: this.state.dscvalue}
+    let copy3 =this.state.graph.nodes.slice()
+    let copy4 =this.state.graph.edges.slice()
+    copy4.push(newEdge)
+    console.log(copy4)
     this.setState(
-      { graph: { nodes: [], edges: [] } }
+      {graph:{nodes:copy3,edges:copy4}}
     )
-  }
-  toggleFullScreen() {
-    if ((document.fullScreenElement && document.fullScreenElement !== null) ||
-      (!document.mozFullScreen && !document.webkitIsFullScreen)) {
-      if (document.documentElement.requestFullScreen) {
-        document.documentElement.requestFullScreen();
-      } else if (document.documentElement.mozRequestFullScreen) {
-        document.documentElement.mozRequestFullScreen();
-      } else if (document.documentElement.webkitRequestFullScreen) {
-        document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
-      }
-    } else {
-      if (document.cancelFullScreen) {
-        document.cancelFullScreen();
-      } else if (document.mozCancelFullScreen) {
-        document.mozCancelFullScreen();
-      } else if (document.webkitCancelFullScreen) {
-        document.webkitCancelFullScreen();
-      }
     }
-  }
-  setToPreviousGraph = () => {
-    this.setState({
-      graph: this.state.prevGraph
-    })
-  }
-  toggleModal = () => {
-    this.setState({
-      isActive: !this.state.isActive,
-      page: 1
-    })
-  }
-  toggleModal2 = () => {
-    this.setState({
-      isActive2: !this.state.isActive2
-    })
-  }
-  toggleShowMenu = () => {
-    this.setState({
-      showMenu: !this.state.showMenu
-    })
-  }
-  handleFullscreen = () => {
-    $('#Canvas').addClass('CanvasFullScreen')
-    this.setState(prevState => ({
-      isFullscreen: !prevState.isFullscreen
-    }))
-  }
-  handleNextPage = () => {
-    //console.log('Next!!!')
-    this.setState({
-      page: 2
-    });
-  }
-  InitializePage = () => {
-    this.setState({
-      page: 1
-    });
-  }
-  CalltMultiplefunctionAtonce = () => {
-    this.InitializePage;
-    this.toggleModal;
-  }
-  handleNodeID(nodeIDs) {
-    this.setState({
-      nodeID: nodeIDs[0]
-    })
-  }
-  handleIncoming = () => {
-    //console.log(this.state.graph.nodes)
-    /*for (let ele3 in graphDB.nodes) {
-      //console.log(this.state.nodeID)
-      if (graphDB.nodes[ele3].id === this.state.nodeID) {
-        this.state.graph.nodes.push(graphDB.nodes[ele3])
-      }
-    }*/
-    for (let eleDB in graphDB.edges) {
-      /*if(this.state.graph.edges[eleCan].from !== graphDB.edges[eleDB].from && this.state.graph.edge[eleCan].to !== graphDB.edge[eleDB].to ){
-         this.state.graph.edges.push(graphDB.edges[eleDB])
-      }*/
-      if (graphDB.edges[eleDB].to === this.state.nodeID) {         
-        this.state.graph.edges.push(graphDB.edges[eleDB])          
-      }
-    }
+    handleClearCanvas(){
     
-    
-
+      this.setState(
+         {graph:{nodes:[],edges:[]}}
+      )
      
+    }
+    toggleFullScreen() {
+      if ((document.fullScreenElement && document.fullScreenElement !== null) ||    
+       (!document.mozFullScreen && !document.webkitIsFullScreen)) {
+        if (document.documentElement.requestFullScreen) {  
+          document.documentElement.requestFullScreen();  
+        } else if (document.documentElement.mozRequestFullScreen) {  
+          document.documentElement.mozRequestFullScreen();  
+        } else if (document.documentElement.webkitRequestFullScreen) {  
+          document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);  
+        }  
+      } else {  
+        if (document.cancelFullScreen) {  
+          document.cancelFullScreen();  
+        } else if (document.mozCancelFullScreen) {  
+          document.mozCancelFullScreen();  
+        } else if (document.webkitCancelFullScreen) {  
+          document.webkitCancelFullScreen();  
+        }  
+      }  
+    } 
+       setToPreviousGraph = () => {
+        this.setState({
+          graph:this.state.prevGraph
+        })
+       }
+      toggleModal = () => {
+        this.setState({
+          isActive:!this.state.isActive,
+          page :1
+        })
+      }
+      toggleModal2 = () =>{
+        this.setState({
+          isActive2:!this.state.isActive2
+        })
+      }
+      toggleEditnodeModal = () =>{
+        this.setState({
+          isEditNodeActive:!this.state.isEditNodeActive
+        })
+      }
+      toggleDeletenodeModal = () => {
+        this.setState({
+          isDeleteNodeActivate:!this.state.isDeleteNodeActivate
+        })
+      }
+      toggleShowMenu = () => {
+        this.setState(prevState => ({
+          showMenu: !prevState.showMenu
+        }))
+      }
+      handleFullscreen = () => {
+        $('#Canvas').addClass('CanvasFullScreen')
+        this.setState(prevState => ({
+          isFullscreen:!prevState.isFullscreen
+        }))
+      }
+      
+      handleNextPage = () => {
+        console.log('Next!!!')
+        this.setState({ page: 2 });
+      }
+      InitializePage = () => {
+        this.setState({
+          page:1
+        });
+      }
+      CalltMultiplefunctionAtonce=() =>{
+        this.InitializePage;
+        this.toggleModal;
+      }
+      handleNodeID (nodeIDs){
+        this.setState({
+          nodeID: nodeIDs[0]
+        })
+
+      }
+      handleIncoming = () => {
+      
+        //conditton
+       
+         
+          // for(let ele in prevState.graph.edges){
+            
+          //   if(prevState.graph.edges[ele].to === prevState.nodeID ){
+          //     newGraph.edges.push(prevState.graph.edges[ele])
+          //   }   
+
+          // } 
+
+          // for(let ele in newGraph.edges){
+          //   for(let ele2 in prevState.graph.nodes){
+          //         if(newGraph.edges[ele].from === prevState.graph.nodes[ele2].id || prevState.graph.nodes[ele2].id === prevState.nodeID)
+          //         newGraph.nodes.push(prevState.graph.nodes[ele2])
+            
+          //   }
+          // } 
+          
+
+      
+        
+      }
+      handleOutcoming = () => {
+        this.setState(prevState => {
+          const newOutGraph = { nodes: [], edges: [] };
+           for(let ele3 in prevState.graph.nodes){
+             if(prevState.graph.nodes[ele3].id === prevState.nodeID){
+               newOutGraph.nodes.push(prevState.graph.nodes[ele3])
+             }   
+           }
+           for(let ele1 in prevState.graph.edges){
+          
+             if(prevState.graph.edges[ele1].from === prevState.nodeID ){
+             newOutGraph.edges.push(prevState.graph.edges[ele1])
+             }   
+
+           }
+           for(let ele1 in newOutGraph.edges){
+             for(let ele3 in prevState.graph.nodes){
+                  if(newOutGraph.edges[ele1].to === prevState.graph.nodes[ele3].id ||prevState.graph.nodes[ele3].id === prevState.nodeID)
+                    newOutGraph.nodes.push(prevState.graph.nodes[ele3])
+          
+            }
+          } 
+
+
+          return {
+            graph: newOutGraph,
+            prevGraph: prevState.graph
+          };
+        });
+      }
+      handleRemoveNode = () => {
+        let BackupNode =this.state.graph.nodes.slice()
+        let BackupEdges =this.state.graph.edges.slice()
+        // let index = this.state.graph.nodes.indexOf(this.state.nodeID);
+        for (let ele1 in BackupNode){
+          if(BackupNode[ele1].id === this.state.nodeID){
+            console.log(ele1);
+            BackupNode.splice(ele1,1);
+            
+          }
+        }
+       
+        console.log(this.state.graph.nodes)
+        this.setState(
+          {graph:{nodes:BackupNode,edges:BackupEdges}}
+       )
+      }
+  
     
-    /*for (let ele in newGraph.edges) {
-      for (let ele2 in prevState.graph.nodes) {
-        if (newGraph.edges[ele].from === prevState.graph.nodes[ele2].id || prevState.graph.nodes[ele2].id === prevState.nodeID)
-          newGraph.nodes.push(prevState.graph.nodes[ele2])
-
-      }
-    }*/
-    this.setState({
-      graph: this.state.graph,
-      //prevGraph: prevState.graph
-    })
-
-
-  }
-  handleOutcoming = () => {
-    this.setState(prevState => {
-      const newOutGraph = { nodes: [], edges: [] };
-      for (let ele3 in prevState.graph.nodes) {
-        if (prevState.graph.nodes[ele3].id === prevState.nodeID) {
-          newOutGraph.nodes.push(prevState.graph.nodes[ele3])
-        }
-      }
-      for (let ele1 in prevState.graph.edges) {
-
-        if (prevState.graph.edges[ele1].from === prevState.nodeID) {
-          newOutGraph.edges.push(prevState.graph.edges[ele1])
-        }
-
-      }
-      for (let ele1 in newOutGraph.edges) {
-        for (let ele3 in prevState.graph.nodes) {
-          if (newOutGraph.edges[ele1].to === prevState.graph.nodes[ele3].id || prevState.graph.nodes[ele3].id === prevState.nodeID)
-            newOutGraph.nodes.push(prevState.graph.nodes[ele3])
-
-        }
-      }
-
-
-      return {
-        graph: newOutGraph,
-        prevGraph: prevState.graph
-      };
-    });
-  }
-
-
   render() {
-    let { value } = this.state;
+    let { value }  = this.state;
     return (
-      <div className="App">
-        <header className="App-header">
-        </header>
-        {
-          this.state.isFullscreen === true ? (
-            null
-          ) : (
-              <p className="App-intro"> NogDB Graph UI </p>
-            )
-        }
-        {
-          this.state.isFullscreen === true ? (
-            null
-          ) : (
-              <div className="Top-Box" align="center">Limit</div>
-            )
-        }
-        {/* <p className="Display-msg">Displaying { Nodenumber = this.graph.nodes.length} nodes, {Relationnumber = this.graph.edges.length} relationships. </p> */}
-        <br />
-        <section>
-          <button id="Addnode-modal" onClick={this.toggleModal}>Add node </button>
-          <Modal isOpen={this.state.isActive} contentLabel="addnode Modal"
-            onRequestClose={this.state.toggleModal}
-            style={customStyle} > <div id="Modal-header"> Add new node
+       <div className="App">
+         <header className="App-header">  
+         </header>
+         {
+           this.state.isFullscreen ===true? (
+             null
+           ) : (
+         <p className="App-intro"> NogDB Graph UI </p> 
+           )
+         }
+         {
+           this.state.isFullscreen === true ? (
+             null
+           ) : (
+         <div className="Top-Box" align="center">Limit</div>
+           )
+         }
+         {/* <p className="Display-msg">Displaying { Nodenumber = this.graph.nodes.length} nodes, {Relationnumber = this.graph.edges.length} relationships. </p> */}
+           <br/>
+            <section>
+            <button id ="Addnode-modal" onClick={this.toggleModal}>Add node </button>
+             <Modal isOpen={this.state.isActive} contentLabel = "addnode Modal" 
+                    onRequestClose={this.state.toggleModal}
+                    style = {customStyle} > <div id="Modal-header"> Add new node 
              <button id="hidemodal-button" onClick={this.toggleModal}>Hide Modal</button>
-            </div>
-            {
-              this.state.page === 1 ? (
+             </div>
+             {
+               this.state.page === 1 ? (
                 <div id="modal-middle-div"> Hello middle 1 <hr></hr>
-                  <select id="select-id"  > <option value="Default Class">Default Class </option>
-                    <option value="Class A">Class A </option>
-                    <option value="Class B">Class B </option>
+                  <select id="select-id"  > <option value="Default Class">Default Class </option> 
+                                          <option value="Class A">Class A </option>
+                                          <option value="Class B">Class B </option>
                   </select>
                 </div>
-              ) : (
-                  <div id="modal-middle-div"> Hello middle 2 <hr></hr>
-                    <input type="text" placeholder="Node name...." className="Nodetext" onChange={this.handleChange} />
-                  </div>
-                )
-            }
-
-            {
-              this.state.page === 1 ? (
-                <div id="modal-bottom-div"> Bottom modal 1 <hr></hr>
-                  <button id="modal-cancel-button" onClick={this.toggleModal} >Cancel </button>
-                  <button id="modal-next-button" onClick={this.handleNextPage} >Next </button>
-
+               ) : (
+                <div id="modal-middle-div"> Hello middle 2 <hr></hr>
+                   <input type="text" placeholder="Node name...." className="Nodetext" onChange={this.handleChange} />
                 </div>
-              ) : (
-                  <div id="modal-bottom-div"> Bottom modal 2 <hr></hr>
-                    <button id="modal-cancel-button" onClick={this.toggleModal}> Cancel </button>
-                    <button id="Addnode-button" onClick={this.handleAddTodoItem} >Add node</button>
-                  </div>
+               )
+             }
+             
+             {
+               this.state.page === 1 ? (
+              <div id="modal-bottom-div"> Bottom modal 1 <hr></hr>
+              <button id="modal-cancel-button" onClick={this.toggleModal} >Cancel </button>
+              <button id="modal-next-button" onClick={this.handleNextPage} >Next </button>
+             
+              </div>
+               ) : (
+                <div id="modal-bottom-div"> Bottom modal 2 <hr></hr>
+                <button id="modal-cancel-button" onClick={this.toggleModal}> Cancel </button>
+                <button id="Addnode-button" onClick={this.AddToDatabase} >Add node</button>
+                </div>
 
-                )
-            }
-          </Modal>
-        </section>
-        {/* CreateEdge Modal */}
-        <section>
-          <button id="Edge-modal" onClick={this.toggleModal2}>Create edge</button>
-          <Modal isOpen={this.state.isActive2} contentLabel="CreateEdge modal "
+               )
+             }
+             </Modal>
+            </section>
+           {/* CreateEdge Modal */}
+           <section>
+           <button id="Edge-modal" onClick={this.toggleModal2}>Create edge</button>
+            <Modal isOpen={this.state.isActive2}  contentLabel="CreateEdge modal "
             onRequestClose={this.state.toggleModal2}
-            style={customCreateEdgeModal}>
+            style = {customCreateEdgeModal}>
             <div id="edge-top-div"> CreateEdge window</div>
             <div id="edge-middle-div">  hello middle edge1
-              <input type="src-Edge" placeholder="Src-Edge..." className="src_Edgetxt" onChange={this.handleSrcChange} />
-              <input type="dsc-Edge" placeholder="Dsc-Edge..." className="dsc_Edgetxt" onChange={this.handleDscChange} />
+              <input type="src-Edge" placeholder="Src-Edge..." className="src_Edgetxt" onChange={this.handleSrcChange}/>
+              <input type="dsc-Edge" placeholder="Dsc-Edge..." className="dsc_Edgetxt" onChange={this.handleDscChange}/>
             </div>
-            <div id="edge-bottom-div">
-              <button id="cancel-edge" onClick={this.toggleModal2}>Cancel </button>
-              <button id="Edge-button" onClick={this.handleAddEdge}>Create edge2</button>
+            <div id ="edge-bottom-div">
+            <button id="cancel-edge" onClick={this.toggleModal2}>Cancel </button>
+            <button id="Edge-button" onClick={this.handleAddEdge}>Create edge2</button>
             </div>
 
-          </Modal>
-        </section>
-        <button id="FullScreen-button" onClick={this.handleFullscreen}>Full screen</button>
-        <button id="Clear-Canvas" onClick={this.handleClearCanvas}> Clear Canvas </button>
-        {
-          this.isFullscreen === true ? (
-            <div> <p> Test parah </p> </div>
-          ) : (
-              <div className="Canvas" align="center">
-            <Graph graph={this.state.graph} options={options}
-                  events={{
-                    select: function (event) {
-                      var { nodes, edges } = event;
-                      // console.log("Selected nodes:");
-                      // console.log(nodes);
-                      // console.log("Selected edges:");
-                      // console.log(edges);
-                      //console.log("This is Select")
+            </Modal>
+           </section>
+           <button id="FullScreen-button" onClick={this.handleFullscreen}>Full screen</button>
+          <button id="Clear-Canvas" onClick={this.handleClearCanvas}> Clear Canvas </button>
+          {
+            this.isFullscreen === true ? (
+              <div> <p> Test parah </p> </div>
+            ) : (
+          <div className="Canvas" align="center">Canvas area 
+            <Graph graph={this.state.graph} options={options} 
+            events={{
+              select: function(event) {
+                var { nodes, edges } = event;
+                // console.log("Selected nodes:");
+                // console.log(nodes);
+                // console.log("Selected edges:");
+                // console.log(edges);
+                console.log("This is Select")
+                
+              },
+              selectNode : (function(event){
+                console.log(event);
+                this.handleNodeID(event.nodes);
+                this.toggleShowMenu();
+                console.log(event.nodes)
+              }).bind(this),
+              deselectNode : (function(event){
+                console.log(event),
+                this.toggleShowMenu();
+                
 
-                    },
-                    selectNode: (function (event) {
-                      //console.log(event);
-                      this.handleNodeID(event.nodes);
-                      this.toggleShowMenu();
-                      console.log(event.nodes)
-                    }).bind(this),
-                    deselectNode: (function (event) {
-                      console.log(event),
-                        this.toggleShowMenu();
-                     
-
-                    }).bind(this),
-                    showPopup: (function (event) {
-                      //console.log(event);
-                      //console.log("This is popup!!")
-
-                    }).bind(this)
-                  }
-                  } />
-
-              </div>
+              }).bind(this),
+              showPopup : (function(event){
+                console.log(event);
+                console.log("This is popup!!")
+            
+              }).bind(this)
+              }
+            } />  
+                   
+           </div>
             )
-        }
-        <button id="his-button" onClick={this.toggleShowMenu}>History</button>
-        {
-          this.state.showMenu === true ? (
-            <div id="history-div"> Command Menu {NodeValue = this.state.nodeID}
-              <button title="Incoming Relationship" onClick={this.handleIncoming}> Incoming </button>
-              {/* <button title="Incoming Relationship" onClick={this.handleIncoming(NodeValue)}> Incoming </button> */}
-              <button title="Outcoming Relationship" onClick={this.handleOutcoming}> Outcoming </button>
-              <button title="Edit Node"> Edit Node </button>
-              <button title="Create Edge"> Create Relationship </button>
-              <button title="Remove Node Canvas"> Remove node from Canvas </button>
-              <button title="Delete Node DB"> Delete node from DB </button>
+          }
+           <button id="his-button" onClick={this.toggleShowMenu}>History</button>
+           {
+             this.state.showMenu === true ? (
+           <div id="history-div"> Command Menu {NodeValue=this.state.nodeID}
+           <button id='Incoming-button' title="Incoming Relationship" onClick={this.handleIncoming}> Incoming </button>
+           {/* <button title="Incoming Relationship" onClick={this.handleIncoming(NodeValue)}> Incoming </button> */}
+           <button id='Outcoming-button' title="Outcoming Relationship" onClick={this.handleOutcoming}> Outcoming </button>
+           <section>
+           <button id='Edit-button' onClick={this.toggleEditnodeModal}> Edit node{this.state.nodeID} </button>
+           <Modal isOpen={this.state.isEditNodeActive} contentLabel='Node Editor'
+           onRequestClose={this.toggleEditnodeModal} style={customCreateEdgeModal}>
 
+           <div id='edit-top-div'> Edit Node</div>
+            <div id='edit-middle-div'> Classname : User <br></br>
+                <div id='inside-editmid-div'> <br></br>
+                    <h5 id='Editnode-classname'>User </h5>
+                    <input type="node-edit" placeholder="Edit...." className="Node-editor" onChange={this.handleSrcChange}/>
+                    <select id="select-nodetype"  > <option value="String">String </option> 
+                                          <option value="Integer">Integer </option>
+                                          <option value="etc">Etc </option>
+                  </select> <br></br>
+                    {/* <h5 id='CreateDate'>CreateDate</h5> */}
+                     <form action="/action_page.php">CreateDate: <input type="date" name="bday"/> <input type="submit"/>
+                     <input type="time" id="myTime" value="22:15:00"/>
+                     <select id="select-nodetype"  > <option value="String">String </option> 
+                                          <option value="Integer">Integer </option>
+                                          <option value="etc">Etc </option>
+                     </select> 
+                     </form> 
+                    
+                   
+                    
+               </div>
+            </div>
+            <div id ="edge-bottom-div">
+            <br></br>
+            <button id="cancel-edge" onClick={this.toggleEditnodeModal}>Cancel </button>
+            <button id="Edge-button" onClick={this.handleAddEdge}>Save Change</button>
             </div>
 
-          ) : (
-              null
-            )
-        }
-      </div>
+
+           </Modal>  
+
+
+           </section>
+           <button id='createRelation-button' title="create relationship"> CreateRelation </button>
+           <button id='removeNode-button' title="remove node from canvas" onClick={this.handleRemoveNode}> Remove </button>
+           <section>
+           <button id='deleteNode-button'title="delete node from Database" onClick={this.toggleDeletenodeModal} > Delete </button>
+              <Modal isOpen={this.state.isDeleteNodeActivate} contentLabel="DeleteNodeModal"
+              onRequestClose={this.toggleDeletenodeModal} style={customCreateEdgeModal}>
+                <div id="top-deletenode-div" > DeleteNode </div>
+                <div id="middle-deletenode-div" > Deleting node {this.state.nodeID} will permanantly be removed from your Database
+                </div>
+                <div id="bottom-deletenode-div" >
+                <button onClick={this.toggleDeletenodeModal}> No,keep Node</button>
+                <button > Yes,Delete Node! </button>
+                   </div>
+
+              </Modal>
+           </section>
+            </div>
+             
+             ) : (
+            null
+             )
+            } 
+       </div>
     );
   }
 }
