@@ -29,8 +29,7 @@ const customCreateEdgeModal = {
     marginBottom: "15%"
   }
 };
-let Nodenumber;
-let Relationnumber;
+
 let NodeValue;
 let data = {
   nodes: [{ id: "Harry" }, { id: "Sally" }, { id: "Alice" }],
@@ -157,7 +156,6 @@ class App extends Component {
     super(props);
     this.state = {
       graph: graphCanvas,
-      // prevGraph: graph1,
       textvalue: " ",
       srcvalue: " ",
       dscvalue: " ",
@@ -172,7 +170,8 @@ class App extends Component {
       nodeID: " ",
       prevNodeID: " ",
       flagisAddtoCanvas: true,
-      createEdgeMode: false
+      createEdgeMode: false,
+      group: " "
     };
     this.handleAddNodebutton = this.handleAddNodebutton.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -193,7 +192,6 @@ class App extends Component {
     this.setFlagtoAddDatabase = this.setFlagtoAddDatabase.bind(this);
     this.AddEdgeToDatabase = this.AddEdgeToDatabase.bind(this);
     this.AddNodeToCanvas = this.AddNodeToCanvas.bind(this);
-
   }
   handleChange(e) {
     this.setState({
@@ -221,22 +219,10 @@ class App extends Component {
     });
   };
 
-  //Incommingbutton(){
-  // -get array [value]
-  // -Add to canvas()
-  //}
-  //Addtodatabase()
-  //Addtocanvas()
-
-  handleAddNodebutton() {
-    let newNode = [{ id: this.state.textvalue, label: this.state.textvalue }];
-    // let CanvasNode =this.state.graph.nodes.slice()
-    // let CanvasEdge =this.state.graph.edges.slice()
-    let check;
-
+  handleAddNodebutton() {  
+    let newNode = [{ id: this.state.textvalue, label: this.state.textvalue, group: this.state.group.value }];
     this.AddNodeToDatabase(newNode);
-    this.AddNodeToCanvas(newNode);
-
+    this.AddNodeToCanvas(newNode,this.state.graph.edges);
     this.toggleModal();
   }
   AddNodeToDatabase = newNode => {
@@ -253,8 +239,7 @@ class App extends Component {
   };
   AddNodeToCanvas = (newNode, E) => {
     let CanvasNode = this.state.graph.nodes.slice();
-    let CanvasEdge = this.state.graph.edges.slice();
-
+    let CanvasEdge
     for (let ele in newNode) {
       if (
         JSON.stringify(CanvasNode).includes(JSON.stringify(newNode[ele])) ===
@@ -270,6 +255,7 @@ class App extends Component {
 
   handleCreateEdgebutton = () => {
     let newEdge = [{ from: this.state.srcvalue, to: this.state.dscvalue }];
+
     this.AddEdgeToDatabase(newEdge);
     this.AddEdgeToCanvas(newEdge);
   };
@@ -286,11 +272,12 @@ class App extends Component {
         CanvasEdge.push(newEdge[ele]);
       }
     }
-    return CanvasEdge;
     //console.log(CanvasNode)
     //console.log()
     //console.log(CanvasEdge)
-    //this.setState({ graph: { nodes: CanvasNode, edges: CanvasEdge } });
+    this.setState({ graph: { nodes: CanvasNode, edges: CanvasEdge } });
+
+    return CanvasEdge;
   };
 
   AddEdgeToDatabase = newEdge => {
@@ -371,25 +358,40 @@ class App extends Component {
   };
 
   handleNextPage = () => {
-    console.log("Next!!!");
-    this.setState({ page: 2 });
+    let g = document.getElementById("select-id")
+    let selectGroup
+    //console.log(g.options[0].selected)
+    for (let i = 0; i<g.options.length;i++){
+      if(g.options[i].selected === true){
+        selectGroup = g.options[i]
+        break
+      }
+    }   
+    this.setState({ 
+      page: 2, 
+      group: selectGroup
+    });
+    
   };
   InitializePage = () => {
     this.setState({
       page: 1
     });
   };
-  handleNodeID=(nodeIDs,prevState)=> {
-    this.setState(prevState=>({
+  handleNodeID = nodeIDs => {
+    this.setState({
+      nodeID: nodeIDs[0]
+    });
+  };
+  handleNodeID2 = (nodeIDs, prevState) => {
+    this.setState(prevState => ({
       nodeID: nodeIDs[0],
-      prevNodeID: prevState.nodeID 
-    }))
-    
-  }
-  
+      prevNodeID: prevState.nodeID
+    }));
+  };
+
   handleIncoming = () => {
-    let CanvasNode = this.state.graph.nodes.slice();
-    let CanvasEdge = this.state.graph.edges.slice();
+    console.log(this.state.graph.nodes.group)
     //console.log(CanvasNode)
     //console.log(CanvasEdge)
     let ArrayEdge = [];
@@ -417,8 +419,6 @@ class App extends Component {
     this.AddNodeToCanvas(ArrayNode, E);
   };
   handleOutcoming = () => {
-    let CanvasNode = this.state.graph.nodes.slice();
-    let CanvasEdge = this.state.graph.edges.slice();
     let ArrayEdge = [];
     let ArrayNode = [];
 
@@ -464,23 +464,26 @@ class App extends Component {
     this.handleRemoveNode();
     this.toggleDeletenodeModal();
   };
-  changeRelationMode=()=>{
+  changeRelationMode = () => {
     this.setState({
       createEdgeMode: true
-    })
-  }
-  handleCreateRelation=()=>{ 
-    this.changeRelationMode
-    let src = this.state.nodeID
-    let dest 
-    console.log(src)
+    });
+  };
+  handleCreateRelation = () => {
+    this.changeRelationMode();
+    let src = this.state.nodeID;
+    let dest = this.state.prevNodeID;
+
     //console.log(this.state.prevNodeID)
+  };
+  selectBoxList=()=>{
+    let arr =[]
+    const list =Object.keys(options.groups)
+    for(let ele in list){
+      arr.push(<option key={ele} value ={list[ele]}>{list[ele]}</option>)
+    }
+    return arr
   }
-    
-
-  
-
-  
 
   render() {
     let { value } = this.state;
@@ -520,10 +523,8 @@ class App extends Component {
                 {" "}
                 Hello middle 1 <hr />
                 <select id="select-id">
-                  {" "}
-                  <option value="Default Class">Default Class </option>
-                  <option value="Class A">Class A </option>
-                  <option value="Class B">Class B </option>
+                  {this.selectBoxList()}
+                  
                 </select>
               </div>
             ) : (
@@ -622,7 +623,7 @@ class App extends Component {
               options={options}
               events={{
                 select: function(event) {
-                  var { nodes, edges } = event;
+              
                   // console.log("Selected nodes:");
                   // console.log(nodes);
                   // console.log("Selected edges:");
@@ -630,15 +631,24 @@ class App extends Component {
                   //console.log("This is Select");
                 },
                 selectNode: function(event) {
-                  //console.log(event);
-                  this.handleNodeID(event.nodes);
+                  //console.log(this.state.createEdgeMode);
+                  if (this.state.createEdgeMode === false) {
+                    this.handleNodeID(event.nodes);
+                  } else {
+                    this.handleNodeID2(event.nodes);
+                  }
                   this.toggleShowMenu();
-                  //console.log(event.nodes);
-                  console.log("nodeID")
-                  console.log(this.state.nodeID)
-                  console.log("prevNodeID")
-                  console.log(this.state.prevNodeID)
-                  console.log(this.state.createEdgeMode)
+
+                  //console.log(this.state.nodeID);
+                  //console.log(this.state.prevNodeID);
+                  if (this.state.createEdgeMode === true) {
+                    const src = this.state.prevNodeID.toString();
+                    const dest = this.state.nodeID.toString();
+
+                    this.AddEdgeToDatabase([{ from: src, to: dest }]);
+                    this.AddEdgeToCanvas([{ from: src, to: dest }]);
+                    this.state.createEdgeMode = false;
+                  }
                 }.bind(this),
                 deselectNode: function(event) {
                   //console.log(event), this.toggleShowMenu();
@@ -730,7 +740,11 @@ class App extends Component {
                 </div>
               </Modal>
             </section>
-            <button id="createRelation-button" title="create relationship" onClick={this.handleCreateRelation}>
+            <button
+              id="createRelation-button"
+              title="create relationship"
+              onClick={this.handleCreateRelation}
+            >
               {" "}
               CreateRelation{" "}
             </button>
