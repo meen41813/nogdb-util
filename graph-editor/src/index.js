@@ -5,6 +5,8 @@ import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import ModalT from './ModalT';
 //import * as backup from './backup';
+import Bootstrap from 'bootstrap/dist/css/bootstrap.css'
+
 
 
 ReactDOM.render(<App />, document.getElementById('root'));

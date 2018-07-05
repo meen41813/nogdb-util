@@ -149,7 +149,7 @@ const options = {
   interaction: {
     hover: true,
     selectable: true,
-    selectConnectedEdges: true
+    selectConnectedEdges: false
   },
   manipulation: {
     enabled: true
@@ -564,7 +564,7 @@ class App extends Component {
       let src = this.state.nodeID;
       let dest = this.state.prevNodeID;
     };
-      selectBoxList=()=>{
+      selectClassList=()=>{
         let arr =[]
         const list =Object.keys(options.groups)
         for(let ele in list){
@@ -639,9 +639,8 @@ class App extends Component {
   changeSize=(size)=>{
    
     this.setState(prevState=>{
-      
+
       let externalOp = prevState.options.groups
-      //  console.log(externalOp)
       let tempGroup
       for(let ele in this.state.graph.nodes){
         if(prevState.graph.nodes[ele].id === prevState.nodeID){
@@ -649,10 +648,7 @@ class App extends Component {
           break
         }
       }
-      console.log()
-      console.log(tempGroup)
       if(tempGroup === "A"){
-        console.log("a")
         const updateSize = {...externalOp.A,size: size}
         const updateGroup = {...externalOp, A:updateSize}   
         return {
@@ -664,7 +660,6 @@ class App extends Component {
       else if (tempGroup === "B"){
         const updateSize = {...externalOp.B,size: size}
         const updateGroup = {...externalOp, B:updateSize}   
-        console.log("b")
         return {
           options:{
             groups: updateGroup
@@ -672,7 +667,6 @@ class App extends Component {
         }
       }
       else if (tempGroup === 'C'){
-        console.log("c")
         const updateSize = {...externalOp.C,size: size}
         const updateGroup = {...externalOp, C:updateSize}   
         return {
@@ -690,13 +684,64 @@ class App extends Component {
           }
         }
       }
-      console.log(prevState.options.groups)
+      
       
     })
     
     
     
-    
+  }
+  
+  selectedColor =()=>{
+    this.setState(prevState=>{
+      let externalOp = prevState.options.groups
+      let color = document.getElementById("select-nodecolor").value
+      let selectGroup
+      for(let ele in this.state.graph.nodes){
+        if(this.state.nodeID === this.state.graph.nodes[ele].id){
+          selectGroup = this.state.graph.nodes[ele].group
+        }
+      }
+      console.log(color)
+      console.log(externalOp)
+      console.log(selectGroup)
+      if(selectGroup==="A"){
+        const updateColor = {...externalOp.A,color:{background: color,border:color }}
+        const updateGroup = {...externalOp, A:updateColor} 
+        return {
+          options:{
+            groups: updateGroup
+          }
+        }
+      }
+      else if(selectGroup==="B"){
+        const updateColor = {...externalOp.B,color:{background: color,border: color}}
+        const updateGroup = {...externalOp, B:updateColor} 
+        return {
+          options:{
+            groups: updateGroup
+          }
+        }
+      }
+      else if(selectGroup==="C"){
+        const updateColor = {...externalOp.C,color:{background: color,border: color}}
+        const updateGroup = {...externalOp, C:updateColor} 
+        return {
+          options:{
+            groups: updateGroup
+          }
+        }
+      }
+      else if(selectGroup==="D"){
+        const updateColor = {...externalOp.D,color:{background: color,border: color}}
+        const updateGroup = {...externalOp, D:updateColor} 
+        return {
+          options:{
+            groups: updateGroup
+          }
+        }
+      }
+    })
   }
   render() {
     let { value }  = this.state;
@@ -770,9 +815,15 @@ class App extends Component {
                <button onClick={this.handleSize100}>100</button>
                <p> display node size </p>
                <p> Node Color </p>
-               <select id="select-nodecolor"  > <option value="String">Red </option> 
-                                         <option value="Integer">Blue </option>
-                                         <option value="etc">Yellow </option>
+               <select id="select-nodecolor" onChange={this.selectedColor}> 
+               <option value='red'>Red</option>
+                <option value='orange'>Orange</option>
+                <option value='green'>Green</option>
+                <option value='blue'>Blue</option>
+                <option value='yellow'>Yellow</option>
+                <option value='aqua'>Aqua</option>
+                <option value='purple'>Purple</option>
+
                  </select>
                
                
@@ -810,7 +861,7 @@ class App extends Component {
              {
                this.state.page === 1 ? (
                 <div id="modal-middle-div"> Hello middle 1 <hr></hr>
-                  <select id="select-id"  > {this.selectBoxList()} </select>
+                  <select id="select-id"  > {this.selectClassList()} </select>
                 </div>
                ) : (
                 <div id="modal-middle-div"> Hello middle 2 <hr></hr>
