@@ -32,6 +32,19 @@ const customStyle = {
     marginBottom: "15%"
   }
 };
+const customEditRStyle = { 
+  content : {
+    posittion:'absolute',
+    top    : '20px',
+    left   : '40px',
+    right  : '40px',
+    bottom : '40px',
+    marginRight  : '15%',
+    marginLeft   : '15%',
+    marginTop    : '10%',
+    marginBottom : '10%' 
+  }
+} ;
 const customCreateEdgeModal = {
   content: {
     position: "absolute",
@@ -178,12 +191,16 @@ class App extends Component {
       textvalue: " ",
       srcvalue: " ",
       dscvalue: " ",
+
       editnodename: " ",
       clear: [data],
       isAddNodeActive: false,
       isAddEdgeActive2: false,
       isEditNodeActive: false,
       isDeleteNodeActivate: false,
+      isDeleteRelationActivate: false,
+      isCreateRelationActive: false,
+      isEditRelationActive:false,
       page: 1,
       showMenu: false,
       isFullscreen: false,
@@ -221,6 +238,7 @@ class App extends Component {
     this.setToPreviousGraph = this.setToPreviousGraph.bind(this);
     this.handleRemoveNode = this.handleRemoveNode.bind(this);
     this.handleDeleteNode = this.handleDeleteNode.bind(this);
+    this.handleDeleteRelation = this.handleDeleteRelation.bind(this);
     this.AddNodeToDatabase = this.AddNodeToDatabase.bind(this);
     this.setFlagtoAddDatabase = this.setFlagtoAddDatabase.bind(this);
     this.AddEdgeToDatabase = this.AddEdgeToDatabase.bind(this);
@@ -245,8 +263,36 @@ class App extends Component {
     this.setridDisplayFormat = this.setridDisplayFormat.bind(this);
     this.saveNodeLabel = this.saveNodeLabel.bind(this);
     this.toggleRelationMenu = this.toggleRelationMenu.bind(this);
+    this.toggleCreateRelationModal = this.toggleCreateRelationModal.bind(this);
+    this.handleCreateRelationbutton = this.handleCreateRelationbutton.bind(
+      this
+    );
   }
-
+  handleCreateRelationbutton = () => {
+    this.AddEdgeToDatabase([
+      { from: this.state.srcEdge, to: this.state.dscEdge }
+    ]);
+    this.AddEdgeToCanvas([
+      { from: this.state.srcEdge, to: this.state.dscEdge }
+    ]);
+    this.toggleCreateRelationModal();
+    this.InitializePage();
+  };
+  setSrcEdge = src => {
+    this.setState({
+      srcEdge: src
+    });
+  };
+  setDecEdge = dest => {
+    this.setState({
+      dscEdge: dest
+    });
+  };
+  toggleCreateRelationModal = () => {
+    this.setState({
+      isCreateRelationActive: !this.state.isCreateRelationActive
+    });
+  };
   toggleRelationMenu = () => {
     this.setState(prevState => ({
       showRelationMenu: !prevState.showRelationMenu
@@ -600,6 +646,16 @@ class App extends Component {
       isDeleteNodeActivate: !this.state.isDeleteNodeActivate
     });
   };
+  toggleEditRelationModal = () => {
+    this.setState({
+      isEditRelationActive:!this.state.isEditRelationActive
+    })
+  }
+  toggleDeleteRelationModal = () => {
+    this.setState({
+      isDeleteRelationActivate: !this.state.isDeleteRelationActivate
+    });
+  };
   toggleShowMenu = () => {
     this.setState(prevState => ({
       showMenu: !prevState.showMenu
@@ -757,6 +813,29 @@ class App extends Component {
     console.log(this.state.graph.nodes);
     this.setState({ graph: { nodes: BackupNode, edges: BackupEdges } });
     this.toggleShowMenu();
+  };
+  handleRemoveRelation = () => {
+    let BackupNode = this.state.graph.edges.slice();
+    let BackupEdges = this.state.graph.edges.slice();
+
+    for (let ele1 in BackupEdges) {
+      if (BackupEdges[ele1].id === this.state.relationID) {
+        BackupEdges.splice(ele1, 1);
+      }
+    }
+
+    this.setState({ graph: { nodes: BackupNode, edges: BackupEdges } });
+    this.toggleRelationMenu();
+  };
+
+  handleDeleteRelation = () => {
+    for (let ele1 in graphDB.edges) {
+      if (graphDB.edges[ele1].id === this.state.relationID) {
+        graphDB.edges.splice(ele1, 1);
+      }
+    }
+    this.handleRemoveRelation();
+    this.toggleDeleteRelationModal();
   };
   handleDeleteNode = () => {
     for (let ele1 in graphDB.nodes) {
@@ -1184,9 +1263,76 @@ class App extends Component {
               title="create relationship"
               onClick={this.handleCreateRelation}
             >
-              {" "}
-              CreateRelation{" "}
+              CreateRelation
             </button>
+            <Modal
+              isOpen={this.state.isCreateRelationActive}
+              contentLabel="addnode Modal"
+              onRequestClose={this.state.toggleCreateRelationModal}
+              style={customStyle}
+            >
+              {" "}
+              <div id="Modal-header">
+                {" "}
+                Add new node
+                <button
+                  id="hidemodal-button"
+                  onClick={this.toggleModalCreateEdge}
+                >
+                  Hide Modal
+                </button>
+              </div>
+              {this.state.page === 1 ? (
+                <div id="modal-middle-div">
+                  {" "}
+                  Hello middle 1 <hr />
+                  <select id="select-id"> {this.selectBoxList()} </select>
+                </div>
+              ) : (
+                <div id="modal-middle-div">
+                  {" "}
+                  Relation Classname : <hr />
+                  <div id="inside-box">
+                    {" "}
+                    This relationship require no attribute{" "}
+                  </div>
+                </div>
+              )}
+              {this.state.page === 1 ? (
+                <div id="modal-bottom-div">
+                  {" "}
+                  Bottom modal 1 <hr />
+                  <button
+                    id="modal-cancel-button"
+                    onClick={this.toggleCreateRelationModal}
+                  >
+                    Cancel{" "}
+                  </button>
+                  <button id="modal-next-button" onClick={this.handleNextPage}>
+                    Next{" "}
+                  </button>
+                </div>
+              ) : (
+                <div id="modal-bottom-div">
+                  {" "}
+                  Bottom modal 2 <hr />
+                  <button onClick={this.InitializePage}> Back </button>
+                  <button
+                    id="modal-cancel-button"
+                    onClick={this.toggleCreateRelationModal}
+                  >
+                    {" "}
+                    Cancel{" "}
+                  </button>
+                  <button
+                    id="Addedge-button"
+                    onClick={this.handleCreateRelationbutton}
+                  >
+                    Create Relation
+                  </button>
+                </div>
+              )}
+            </Modal>
             <button
               id="removeNode-button"
               title="remove node from canvas"
@@ -1211,19 +1357,17 @@ class App extends Component {
             >
               <div id="top-deletenode-div"> DeleteNode </div>
               <div id="middle-deletenode-div">
-                {" "}
                 Deleting node {this.state.nodeID} will permanantly be removed
                 from your Database
               </div>
               <div id="bottom-deletenode-div">
                 <button onClick={this.toggleDeletenodeModal}>
-                  {" "}
                   No,keep Node
                 </button>
-                <button onClick={this.handleDeleteNode}>
+                <Button color="danger" onClick={this.handleDeleteNode}>
                   {" "}
                   Yes,Delete Node!{" "}
-                </button>
+                </Button>
               </div>
             </Modal>
           </div>
@@ -1231,15 +1375,70 @@ class App extends Component {
       );
     } else if (this.state.showMenu === false) {
       commandbox = null;
-    } else if (this.state.showRelationMenu === true) {
-      commandbox = (
-        <div id="command-div">
-          <button> 1 </button>
-          <button> 2 </button>
+    }
+    let relationbox;
+
+    if (this.state.showRelationMenu === true) {
+      relationbox = (
+        <div id="relationMenu-div">
+          Relationship Menu : {this.state.relationID}
+          <button onClick={this.toggleEditRelationModal}> Edit Relationship </button>
+        <Modal isOpen={this.state.isEditRelationActive} contentLabel = "EditRelationship Modal" 
+                    onRequestClose={this.toggleEditRelationModal}
+                    style = {customEditRStyle} > <div id="editRModal-header">  Edit Relationship 
+             <button id="hidemodal-button" onClick={this.toggleEditRelationModal}>Hide Modal</button>
+             <hr></hr>
+             </div>
+            
+                <div id="editRmodal-middle-div"> relation <hr></hr>
+                <div id="ineditRmodal-middle-div">
+                   inRelation <input type="text" placeholder="Node name...." className="Nodetext" onChange={this.handleChange} />
+                       <select id="select-id"  > {this.selectBoxList()} </select> <br></br><br></br>
+                     message   <input type="text" placeholder="Type message here...." className="msgTxt"  /> 
+                       <select id="select-id"  > {this.selectBoxList()} </select>        <br></br><br></br>
+                   outRelation  <input type="text" placeholder="Node name...." className="Nodetext" onChange={this.handleChange} />
+                       <select id="select-id"  > {this.selectBoxList()} </select>
+                   </div>
+                </div>
+                <br></br>
+                <div id="editRmodal-bottom-div">  
+                <button id="modal-cancel-button" onClick={this.toggleEditRelationModal}> Cancel </button>
+                <button id="Addnode-button" onClick={this.handleAddNodebutton} >Save Change</button>
+                </div>
+
+               
+             </Modal>
+          <button onClick={this.toggleDeleteRelationModal}>
+            {" "}
+            Delete Relationship{" "}
+          </button>
+          <Modal
+            isOpen={this.state.isDeleteRelationActivate}
+            contentLabel="DeleteRelationModal"
+            onRequestClose={this.toggleDeleteRelationModal}
+            style={customCreateEdgeModal}
+          >
+            <div id="top-deletenode-div"> Delete Relation </div>
+            <div id="middle-deletenode-div">
+              {" "}
+              Deleting Relation {this.state.relationID} will permanantly be
+              removed from your Database
+            </div>
+            <div id="bottom-deletenode-div">
+              <button onClick={this.toggleDeleteRelationModal}>
+                {" "}
+                No,keep Relationship
+              </button>
+              <Button color="danger" onClick={this.handleDeleteRelation}>
+                {" "}
+                Yes,Delete Relationship!{" "}
+              </Button>
+            </div>
+          </Modal>
         </div>
       );
     } else if (this.state.showRelationMenu === false) {
-      commandbox = null;
+      relationbox = null;
     }
 
     return (
@@ -1372,7 +1571,7 @@ class App extends Component {
         ) : (
           <div className="Canvas" align="center">
             {commandbox}
-            {/* {relationbox} */}
+            {relationbox}
 
             <Graph
               graph={this.state.graph}
@@ -1390,10 +1589,12 @@ class App extends Component {
                   if (this.state.createEdgeMode === true) {
                     const src = this.state.prevNodeID.toString();
                     const dest = this.state.nodeID.toString();
-                    this.AddEdgeToDatabase([{ from: src, to: dest }]);
-                    this.AddEdgeToCanvas([{ from: src, to: dest }]);
+                    this.setSrcEdge(src);
+                    this.setDecEdge(dest);
+                    this.toggleCreateRelationModal();
                     this.state.createEdgeMode = false;
                   }
+
                   //this.handleNodeID(event.nodes);
                   this.handleNodeClass();
                   this.getNodeName();
@@ -1407,8 +1608,9 @@ class App extends Component {
                   console.log(event), this.toggleShowMenu();
                   // this.Resetalldisplaydata();
                   console.log(this.state.isPropertyDisplay);
-                  this.setHideprop();
+                  //this.toggleRelationMenu();
                   this.setHideEdge();
+                  this.setHideprop();
                   this.handleAlertFalse();
                 }.bind(this),
 
@@ -1423,6 +1625,8 @@ class App extends Component {
                 deselectEdge: function(event) {
                   //console.log(event);
                   //console.log("This is popup!!")
+                  this.toggleRelationMenu();
+
                   this.setHideEdge();
                   this.setHideprop();
                   console.log(this.state.isPropertyDisplay);

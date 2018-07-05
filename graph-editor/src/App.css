@@ -92,9 +92,17 @@
 
 
 }
+#inside-box{
+  border:1px solid black;
+}
 #command-div {
   width:100%;
-  height:20%;
+  height:10%;
+}
+#relationMenu-div {
+  width:100%;
+  height:10%;
+  border:1px solid black;
 }
 .CanvasFullScreen {
   test-align:center;
@@ -124,6 +132,25 @@
   position:relative;
   height:40%;
   top:-10%;
+  border:1px solid black;
+}
+#ineditRmodal-middle-div {
+  height:80%;
+  top:-10%;
+  border:1px solid black;
+}
+.msgTxt {
+  width:70%;
+  height:30%;
+}
+#editRmodal-bottom-div{
+  height:20%;
+  top:-30%;
+}
+#editRmodal-middle-div{
+  position:relative;
+  height:70%;
+  
   border:1px solid black;
 }
 #modal-bottom-div{
@@ -224,4 +251,8 @@
 #setting-prop {
   border:1px solid black;
   float:clear;
+}
+#alertmsg {
+  width:100%;
+  height:5%;
 }
