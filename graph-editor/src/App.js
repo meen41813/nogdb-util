@@ -61,14 +61,16 @@ const customCreateEdgeModal = {
 let Nodenumber;
 let Relationnumber;
 let NodeValue;
-let data = {
-  nodes: [{ id: "Harry" }, { id: "Sally" }, { id: "Alice" }],
-  links: [
-    { source: "Harry", target: "Sally" },
-    { source: "Harry", target: "Alice" }
-  ]
-};
 
+/// list of class edge
+let classListEdge={
+  groups: {
+    AAA:{color: "Crimson"},
+    BBB:{color: "Navy"},
+    CCC:{color: "Magenta"},
+    DDD:{color: "YellowGreen"},
+  }
+}
 let graphDB = {
   nodes: [
     { id: "1", label: "Bill", group: "A" },
@@ -189,43 +191,37 @@ class App extends Component {
       options: options,
       graph: graphCanvas,
       textvalue: " ",
-      srcvalue: " ",
-      dscvalue: " ",
+      text2value: " ",
 
-      editnodename: " ",
-      clear: [data],
       isAddNodeActive: false,
-      isAddEdgeActive2: false,
       isEditNodeActive: false,
       isDeleteNodeActivate: false,
-      isDeleteRelationActivate: false,
       isCreateRelationActive: false,
       isEditRelationActive:false,
+      isDeleteRelationActivate: false,
+
       page: 1,
       showMenu: false,
       isFullscreen: false,
+
       nodeID: " ",
-      relationID: " ",
       prevNodeID: " ",
+      relationID: " ",
       nodeClass: " ",
-      flagisAddtoCanvas: true,
       NodeName: "",
       CreateDate: "",
-      isPropertyDisplay: "nodeFalse",
-      isEdgeproperty: false,
-      createEdgeMode: false,
-      group: " ",
-      isAlertShow: false,
       NodeinID: "",
       NodeoutID: "",
       NodeLabel: " ",
+
+      isPropertyDisplay: "nodeFalse",
+      changeNodeIDMode: false,
+      group_state: " ",
+      isAlertShow: false,
       showRelationMenu: false
     };
     this.handleAddNodebutton = this.handleAddNodebutton.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.handleSrcChange = this.handleSrcChange.bind(this);
-    this.handleDscChange = this.handleDscChange.bind(this);
-    this.handleEditNodeName = this.handleEditNodeName.bind(this);
     this.AddEdgeToCanvas = this.AddEdgeToCanvas.bind(this);
     this.handleClearCanvas = this.handleClearCanvas.bind(this);
     this.handleNextPage = this.handleNextPage.bind(this);
@@ -235,12 +231,10 @@ class App extends Component {
     this.handleNodeClass = this.handleNodeClass.bind(this);
     this.handleIncoming = this.handleIncoming.bind(this);
     this.handleOutcoming = this.handleOutcoming.bind(this);
-    this.setToPreviousGraph = this.setToPreviousGraph.bind(this);
     this.handleRemoveNode = this.handleRemoveNode.bind(this);
     this.handleDeleteNode = this.handleDeleteNode.bind(this);
     this.handleDeleteRelation = this.handleDeleteRelation.bind(this);
     this.AddNodeToDatabase = this.AddNodeToDatabase.bind(this);
-    this.setFlagtoAddDatabase = this.setFlagtoAddDatabase.bind(this);
     this.AddEdgeToDatabase = this.AddEdgeToDatabase.bind(this);
     this.AddNodeToCanvas = this.AddNodeToCanvas.bind(this);
     this.getNodeName = this.getNodeName.bind(this);
@@ -409,7 +403,7 @@ class App extends Component {
     for (let ele in this.state.graph.edges) {
       if (this.state.graph.edges[ele].id === this.state.relationID) {
         this.setState({
-          nodeinID: this.state.graph.edges[ele].to
+          NodeinID: this.state.graph.edges[ele].to
         });
       }
     }
@@ -463,21 +457,9 @@ class App extends Component {
       textvalue: e.target.value
     });
   }
-  handleSrcChange(e) {
-    this.setState({
-      srcvalue: e.target.value
-    });
-  }
-  handleDscChange(e) {
-    this.setState({
-      dscvalue: e.target.value
-    });
-  }
-  handleEditNodeName(e) {
-    this.setState({
-      editnodename: e.target.value
-    });
-  }
+
+
+  
   setNewNodeName = (nodeID, newName) => {
     this.setState(prevState => {
       let canvasNode = prevState.graph.nodes.slice();
@@ -503,28 +485,19 @@ class App extends Component {
     });
   };
   updateNodeName() {
-    this.setNewNodeName(this.state.nodeID, this.state.editnodename);
+    this.setNewNodeName(this.state.nodeID, this.state.textvalue);
     console.log(this.state.graph.nodes);
     this.toggleEditnodeModal();
     this.handleAlertTrue();
   }
-  setFlagtoAddDatabase = () => {
-    this.setState({
-      flagisAddtoCanvas: false
-    });
-  };
-  setFlagtoAddCanvas = () => {
-    this.setState({
-      flagisAddtoCanvas: true
-    });
-  };
+  
 
   handleAddNodebutton() {
     let newNode = [
       {
         id: this.state.textvalue,
         label: this.state.textvalue,
-        group: this.state.group.value
+        group_state: this.state.group_state.value
       }
     ];
     this.AddNodeToDatabase(newNode);
@@ -559,7 +532,7 @@ class App extends Component {
     });
   };
   handleCreateEdgebutton = () => {
-    let newEdge = [{ from: this.state.srcvalue, to: this.state.dscvalue }];
+    let newEdge = [{ from: this.state.textvalue, to: this.state.text2value }];
     this.AddEdgeToDatabase(newEdge);
     this.AddEdgeToCanvas(newEdge);
     this.toggleModalCreateEdge();
@@ -680,7 +653,7 @@ class App extends Component {
     }
     this.setState({
       page: 2,
-      group: selectGroup
+      group_state: selectGroup
     });
   };
   InitializePage = () => {
@@ -778,7 +751,7 @@ class App extends Component {
   };
   changeRelationMode = () => {
     this.setState({
-      createEdgeMode: true
+      changeNodeIDMode: true
     });
   };
   handleCreateRelation = () => {
@@ -786,7 +759,7 @@ class App extends Component {
     let src = this.state.nodeID;
     let dest = this.state.prevNodeID;
   };
-  selectBoxList = () => {
+  selectGroupNode = () => {
     let arr = [];
     const list = Object.keys(options.groups);
     for (let ele in list) {
@@ -798,7 +771,19 @@ class App extends Component {
     }
     return arr;
   };
-
+  selectGroupEdge =()=>{
+    let arr =[]
+    const list = Object.keys(classListEdge.groups)
+    
+    for (let ele in list){
+      arr.push(
+        <option key={ele} value={list[ele]}>
+          {list[ele]}
+        </option>
+      )
+    }
+    return arr
+  }
   handleRemoveNode = () => {
     let BackupNode = this.state.graph.nodes.slice();
     let BackupEdges = this.state.graph.edges.slice();
@@ -933,9 +918,6 @@ class App extends Component {
           selectGroup = this.state.graph.nodes[ele].group;
         }
       }
-      console.log(color);
-      console.log(externalOp);
-      console.log(selectGroup);
       if (selectGroup === "A") {
         const updateColor = {
           ...externalOp.A,
@@ -1111,7 +1093,7 @@ class App extends Component {
                   <h4>Tab 1 Edge</h4>
                   @rid : {this.state.relationID} <br />
                   @class : relationship <br />
-                  in : {this.state.nodeinID} <br />
+                  in : {this.state.NodeinID} <br />
                   inRelation : <br />
                   message : <br />
                   out : {this.state.NodeoutID} <br />
@@ -1224,7 +1206,7 @@ class App extends Component {
                     type="node-edit"
                     placeholder="Edit...."
                     className="Node-editor"
-                    onChange={this.handleEditNodeName}
+                    onChange={this.handleChange}
                   />
                   <select id="select-nodetype">
                     {" "}
@@ -1286,7 +1268,7 @@ class App extends Component {
                 <div id="modal-middle-div">
                   {" "}
                   Hello middle 1 <hr />
-                  <select id="select-id"> {this.selectBoxList()} </select>
+                  <select id="select-id"> {this.selectGroupEdge} </select>
                 </div>
               ) : (
                 <div id="modal-middle-div">
@@ -1393,11 +1375,11 @@ class App extends Component {
                 <div id="editRmodal-middle-div"> relation <hr></hr>
                 <div id="ineditRmodal-middle-div">
                    inRelation <input type="text" placeholder="Node name...." className="Nodetext" onChange={this.handleChange} />
-                       <select id="select-id"  > {this.selectBoxList()} </select> <br></br><br></br>
+                       <select id="select-id"  > {this.selectBoxList} </select> <br></br><br></br>
                      message   <input type="text" placeholder="Type message here...." className="msgTxt"  /> 
-                       <select id="select-id"  > {this.selectBoxList()} </select>        <br></br><br></br>
+                       <select id="select-id"  > {this.selectBoxList} </select>        <br></br><br></br>
                    outRelation  <input type="text" placeholder="Node name...." className="Nodetext" onChange={this.handleChange} />
-                       <select id="select-id"  > {this.selectBoxList()} </select>
+                       <select id="select-id"  > {this.selectBoxList} </select>
                    </div>
                 </div>
                 <br></br>
@@ -1475,7 +1457,7 @@ class App extends Component {
             <div id="modal-middle-div">
               {" "}
               Hello middle 1 <hr />
-              <select id="select-id"> {this.selectBoxList()} </select>
+              <select id="select-id"> {this.selectGroupNode()} </select>
             </div>
           ) : (
             <div id="modal-middle-div">
@@ -1521,41 +1503,7 @@ class App extends Component {
           )}
         </Modal>
 
-        <button id="Edge-modal" onClick={this.toggleModalCreateEdge}>
-          Create edge
-        </button>
-        <Modal
-          isOpen={this.state.isCreateEdgeActive}
-          contentLabel="CreateEdge modal "
-          onRequestClose={this.state.toggleModal2}
-          style={customCreateEdgeModal}
-        >
-          <div id="edge-top-div"> CreateEdge window</div>
-          <div id="edge-middle-div">
-            {" "}
-            hello middle edge1
-            <input
-              type="src-Edge"
-              placeholder="Src-Edge..."
-              className="src_Edgetxt"
-              onChange={this.handleSrcChange}
-            />
-            <input
-              type="dsc-Edge"
-              placeholder="Dsc-Edge..."
-              className="dsc_Edgetxt"
-              onChange={this.handleDscChange}
-            />
-          </div>
-          <div id="edge-bottom-div">
-            <button id="cancel-edge" onClick={this.toggleModalCreateEdge}>
-              Cancel{" "}
-            </button>
-            <button id="Edge-button" onClick={this.handleCreateEdgebutton}>
-              Create edge2
-            </button>
-          </div>
-        </Modal>
+        
         <button id="FullScreen-button" onClick={this.handleFullscreen}>
           Full screen
         </button>
@@ -1581,18 +1529,18 @@ class App extends Component {
                   console.log("This is Select");
                 },
                 selectNode: function(event) {
-                  if (this.state.createEdgeMode === false) {
+                  if (this.state.changeNodeIDMode === false) {
                     this.handleNodeID(event.nodes);
                   } else {
                     this.handleNodeID2(event.nodes);
                   }
-                  if (this.state.createEdgeMode === true) {
+                  if (this.state.changeNodeIDMode === true) {
                     const src = this.state.prevNodeID.toString();
                     const dest = this.state.nodeID.toString();
                     this.setSrcEdge(src);
                     this.setDecEdge(dest);
                     this.toggleCreateRelationModal();
-                    this.state.createEdgeMode = false;
+                    this.state.changeNodeIDMode = false;
                   }
 
                   //this.handleNodeID(event.nodes);
