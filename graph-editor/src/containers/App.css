@@ -19,6 +19,13 @@
   border:1px solid black;
   margin:0;
 }
+.History-box {
+  font-size:70%;
+  text-align:left;
+  padding:1%;
+  border:1px solid black;
+  margin:0;
+}
 .Top-Box {
   width: 70%;
   height:70px;
@@ -125,6 +132,13 @@
   margin-right:0;
   border:1px solid black;
 }
+#addnodeModal-header{
+  position:relative;
+  top:0%;
+  height:20%;
+  margin-right:0;
+  border:1px solid black;
+}
 #hidemodal-button{
   float: right;
 }
@@ -132,6 +146,12 @@
   position:relative;
   height:40%;
   top:-10%;
+  border:1px solid black;
+}
+#addnodemodal-middle-div{
+  position:relative;
+  height:70%;
+  top:10%;
   border:1px solid black;
 }
 #ineditRmodal-middle-div {
@@ -159,6 +179,12 @@
   top:-10%;
   border:1px solid black;
 }
+#addnodemodal-bottom-div{
+  position:relative;
+  height:10%;
+  top:10%;
+  border:1px solid black;
+}
 #edge-top-div {
   position:relative;
   top:-9%;
@@ -181,7 +207,7 @@
 }
 #edit-middle-div {
   position:relative;
-  height:60%;
+  height:90%;
   top:-10%;
   border:1px solid black;
 }
@@ -192,7 +218,9 @@
   border:1px solid black;
 }
 #select-id{
-  width:100px;
+  width:70%;
+  padding-left:5%;
+  padding-top:5%;
 }
 .Nodetext {
   width:70%;
