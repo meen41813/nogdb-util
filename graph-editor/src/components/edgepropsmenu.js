@@ -52,12 +52,12 @@ class EdgePropertyMenu extends Component {
       }
     };
       render () {
-         
+        const {graph,scale,data} = this.props;
   
           return (
             <div className="Left-tab">
             <div id="topbar-prop">
-              Relationship <button onClick={this.setHideprop}>Hide </button>
+              Relationship <button onClick={this.props.HideEdgeMenu}>Hide </button>
             </div>
   
             <Nav tabs>
@@ -87,12 +87,12 @@ class EdgePropertyMenu extends Component {
                 <Row>
                   <Col sm="12">
                     <h4>Tab 1 Edge</h4>
-                    @rid : {this.state.relationID} <br />
+                    @rid : {data.edgeID} <br />
                     @class : relationship <br />
-                    in : {this.state.nodeinID} <br />
+                    in : {data.edgeIn} <br />
                     inRelation : <br />
                     message : <br />
-                    out : {this.state.NodeoutID} <br />
+                    out : {data.edgeOut} <br />
                     outRelation : <br />
                   </Col>
                 </Row>

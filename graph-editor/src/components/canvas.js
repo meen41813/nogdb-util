@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import Graph from "react-graph-vis";
 import { connect } from "react-redux";
-import { getnodeid } from "../actions/dataAction.js";
-import {shownodemenu,hidenodemenu,showedgemenu,hideedgemenu} from '../actions/node-edgesmenu';
+import {getnodeid,getnodeclass,getnodename,getedgeid} from '../actions/dataAction.js';
+import {getedgeclass,getinrelation,getoutrelation} from '../actions/dataAction.js';
+import {shownodemenu,hidenodemenu,showedgemenu,hideedgemenu,} from '../actions/node-edgesmenu';
 import { removenode } from "../actions/menuAction";
 import Modal from "react-modal";
 import {
@@ -31,6 +32,24 @@ const mapDispatchToProps = dispatch => {
   return {
     GetNodeID: NodeID => {
       dispatch(getnodeid(NodeID));
+    },
+    GetEdgeID: EdgeID => {
+      dispatch (getedgeid(EdgeID))
+    },
+    GetNodeClass :NodeClass => {
+      dispatch (getnodeclass(NodeClass))
+    },
+    GetEdgeClass :EdgeClass => {
+      dispatch (getedgeclass(EdgeClass))
+    },
+    GetinRelation :number => {
+      dispatch (getinrelation(number))
+    },
+    GetoutRelation:number => {
+      dispatch (getoutrelation(number))
+    },
+    GetNodeName : NodeName => {
+      dispatch (getnodename(NodeName))
     },
     ShowNodeMenu: () => {
       dispatch(shownodemenu());
@@ -106,10 +125,87 @@ class Canvas extends Component {
   constructor(props) {
     super(props);
     this.handleNodeID = this.handleNodeID.bind(this);
+    this.handleGetNodeName = this.handleGetNodeName.bind(this);
+    this.getinRelationNode = this.getinRelationNode.bind(this);
+    this.getoutRelationNode = this.getoutRelationNode.bind(this);
+    this.setDisplayFormat = this.setDisplayFormat.bind(this);
   }
   handleNodeID(nodeIDs) {
     this.props.GetNodeID(nodeIDs[0]);
   }
+  
+  handleGetNodeName = () => {
+    for (let ele in this.props.graph.graphCanvas.nodes) {
+      if (this.props.graph.graphCanvas.nodes[ele].id === this.props.data.nodeID) {
+
+        this.props.GetNodeName(this.props.graph.graphCanvas.nodes[ele].label)
+      }
+    }
+  };
+handleNodeClass = () => {
+    for (let ele in this.props.graph.graphCanvas.nodes) {
+      if (this.props.graph.graphCanvas.nodes[ele].id === this.props.data.nodeID) {
+        // this.setState({
+        //   nodeClass: this.state.graph.nodes[ele].group
+        // });
+        this.props.GetNodeClass(this.props.graph.graphCanvas.nodes[ele].group)
+      }
+    }
+  };  
+
+handlerelationID = (relaID) => {
+  this.props.GetEdgeID(relaID[0])
+  };
+
+getinRelationNode = () => {
+    for (let ele in this.props.graph.graphCanvas.edges) {
+      if (this.props.graph.graphCanvas.edges[ele].id === this.props.data.edgeID) {
+        this.props.GetinRelation(this.props.graph.graphCanvas.edges[ele].to)
+        
+      }
+    }
+  }; 
+  
+getoutRelationNode = () => {
+    for (let ele in this.props.graph.graphCanvas.edges) {
+      if (this.props.graph.graphCanvas.edges[ele].id === this.props.data.edgeID) {
+        this.props.GetoutRelation(this.props.graph.graphCanvas.edges[ele].from)
+       
+      }
+    }
+  };
+  
+  setDisplayFormat = (dumb) => {
+    this.setState(prevState => {
+      let canvasNode = this.props.graph.graphCanvas.nodes.slice();
+      let canvasEdge = this.props.graph.grapCanvas.edges.slice();
+      let BackupGraph = this.props.graph.graphCanvas.nodes.slice();
+      let backUp;
+      for (let ele in BackupGraph.nodes) {
+        if ( BackupGraph.nodes[ele].id === this.props.data.nodeID) {      
+          backUp = BackupGraph.nodes[ele];
+          break;
+        }
+      }
+      let chosen;
+      for (let ele in canvasNode) {
+        if (this.state.nodeID === canvasNode[ele].id) {
+          chosen = canvasNode[ele];
+
+          const update = { ...chosen, label: backUp.id };
+          canvasNode[ele] = update;
+          console.log(canvasNode[ele]);
+        }
+      }
+      return {
+        graph: {
+          nodes: canvasNode,
+          edges: canvasEdge
+        }
+      };
+    });
+  };
+
   handleRemoveNode = () => {
     this.props.RemoveNode(this.props.data.nodeID);
   };
@@ -369,28 +465,22 @@ class Canvas extends Component {
               this.handleNodeID(event.nodes);
               this.props.ShowNodeMenu();
               this.props.HideEdgeMenu();
-              // this.handleNodeClass();
-              // this.getNodeName();
+              this.handleGetNodeName();
+              this.handleNodeClass();
               // this.getCreateDate();
-              // this.toggleShowMenu();
-              // this.setDisplayprop();
             }.bind(this)  ,
             deselectNode: function(event) {
               console.log(event), 
               this.props.HideNodeMenu();
-              // this.Resetalldisplaydata();
-              //this.toggleRelationMenu();
-              // this.setHideEdge();
-              // this.setHideprop();
               // this.handleAlertFalse();
               // this.toggleCreateRAlertmsgFalse();
             }.bind(this),
 
 
             selectEdge: function(event) {
-              // this.handlerelationID(event.edges);
-              // this.getinRelationNode();
-              // this.getoutRelationNode();
+              this.handlerelationID(event.edges);
+              this.getinRelationNode();
+              this.getoutRelationNode();
               this.props.ShowEdgeMenu();
               this.props.HideNodeMenu();
               // this.setDisplayEdge();

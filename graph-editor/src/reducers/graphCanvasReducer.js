@@ -190,6 +190,14 @@ const graphCanvasReducer = (state = GraphSetting, action) => {
             options:{...state.options,groups:updateGroup}
           }
         }
+        case 'UPDATEGRAPH':
+        return  {
+          ...state,
+          graphCanvas: {
+            nodes:action.payload1,
+            edges:action.payload2
+          }
+        }
 
     default:
       state = {

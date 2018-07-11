@@ -111,36 +111,28 @@ class App extends Component {
       isCreateRelationActive: false,
       isEditRelationActive:false,
       page: 1,
-      showMenu: false,
-      // isFullscreen: false,
-      nodeID: " ",
-      relationID: " ",
+      
       prevNodeID: " ",
-      nodeClass: " ",
+
       flagisAddtoCanvas: true,
-      NodeName: "",
       CreateDate: "",
-      isPropertyDisplay: "nodeFalse",
       isEdgeproperty: false,
       createEdgeMode: false,
-      group: " ",
       isAlertShow: false,
-      NodeinID: "",
-      NodeoutID: "",
+     
       NodeLabel: " ",
-      showRelationMenu: false,
       isCreateRAlertShow:false
     };
     this.handleAddNodebutton = this.handleAddNodebutton.bind(this);
     this.handleNextPage = this.handleNextPage.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    // this.handleSrcChange = this.handleSrcChange.bind(this);
-    // this.handleDscChange = this.handleDscChange.bind(this);
     this.handleEditNodeName = this.handleEditNodeName.bind(this);
-    // this.AddEdgeToCanvas = this.AddEdgeToCanvas.bind(this);
      this.handleClearCanvas = this.handleClearCanvas.bind(this);
-    // this.toggleShowMenu = this.toggleShowMenu.bind(this);
       this.handleFullscreen = this.handleFullscreen.bind(this);
+       // this.handleSrcChange = this.handleSrcChange.bind(this);
+    // this.handleDscChange = this.handleDscChange.bind(this);
+      // this.AddEdgeToCanvas = this.AddEdgeToCanvas.bind(this);
+      // this.toggleShowMenu = this.toggleShowMenu.bind(this);
     // this.handleNodeID = this.handleNodeID.bind(this);
     // this.handleNodeClass = this.handleNodeClass.bind(this);
     // this.handleIncoming = this.handleIncoming.bind(this);
@@ -640,39 +632,8 @@ export default connect(
 //     });
 //   };
 
-//   getoutRelationNode = () => {
-//     for (let ele in this.state.graph.edges) {
-//       if (this.state.graph.edges[ele].id === this.state.relationID) {
-//         this.setState({
-//           NodeoutID: this.state.graph.edges[ele].from
-//         });
-//       }
-//     }
-//   };
 
-//   getinRelationNode = () => {
-//     for (let ele in this.state.graph.edges) {
-//       if (this.state.graph.edges[ele].id === this.state.relationID) {
-//         this.setState({
-//           nodeinID: this.state.graph.edges[ele].to
-//         });
-//       }
-//     }
-//   };
 
-//   handlerelationID = relaID => {
-//     this.setState({
-//       relationID: relaID[0]
-//     });
-//     console.log(this.state.relationID);
-//   };
-//   toggle = tab => {
-//     if (this.state.activeTab !== tab) {
-//       this.setState({
-//         activeTab: tab
-//       });
-//     }
-//   };
 //   handleAlertTrue = () => {
 //     this.setState({
 //       isAlertShow: true
@@ -889,24 +850,7 @@ export default connect(
 //     console.log(this.state.nodeID);
 //     console.log(this.state.prevNodeID);
 //   };
-//   handleNodeClass = () => {
-//     for (let ele in this.state.graph.nodes) {
-//       if (this.state.graph.nodes[ele].id === this.state.nodeID) {
-//         this.setState({
-//           nodeClass: this.state.graph.nodes[ele].group
-//         });
-//       }
-//     }
-//   };
-//   getNodeName = () => {
-//     for (let ele in this.state.graph.nodes) {
-//       if (this.state.graph.nodes[ele].id === this.state.nodeID) {
-//         this.setState({
-//           NodeName: this.state.graph.nodes[ele].label
-//         });
-//       }
-//     }
-//   };
+//  
 //   getCreateDate = () => {
 //     for (let ele in this.state.graph.nodes) {
 //       if (this.state.graph.nodes[ele].id === this.state.nodeID) {
