@@ -11,7 +11,8 @@ import Canvas from '../components/canvas';
 import History from '../components/history';
 import { connect} from 'react-redux';
 import {addnode,clearcanvas,fullscreen,exitfullscreen} from '../actions/mainButtonAction'
-import NodePropertyMenu from '../components/menu';
+import NodePropertyMenu from '../components/nodepropsmenu';
+import EdgePropertyMenu from '../components/edgepropsmenu';
 
 const customStyle = {
   content: {
@@ -254,7 +255,7 @@ class App extends Component {
     }));
   };
   render() {
-    const {graph,scale} = this.props;
+    const {graph,scale,data} = this.props;
     let pheader;
     if (scale.isFullscreen === true) {
       pheader = null;
@@ -273,11 +274,25 @@ class App extends Component {
     } else {
       historybox = <History/>
     }
+    let Nodetabbars;
+    if (scale.NodeMenu === true ){
+      Nodetabbars = <NodePropertyMenu/>
+    } else if (scale.NodeMenu ===false){
+      Nodetabbars = null;
+    }
+    let Edgetabbars;
+    if (scale.EdgeMenu === true){
+      Edgetabbars = <EdgePropertyMenu/>
+    }else if (scale.EdgeMenu === false){
+      Edgetabbars = null;
+    }
+    
    
     return(
       <div id='test-div'>
       {pheader}
       {/* <NodePropertyMenu/> */}
+      {Nodetabbars} {Edgetabbars}
       {consolebox}
 
 

@@ -1,5 +1,6 @@
 const Data = {
-    nodeID:null
+    nodeID:null,
+    
 }
 const dataReducer = (state = Data,action) => {
     switch(action.type){

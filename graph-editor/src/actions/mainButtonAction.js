@@ -12,11 +12,15 @@ const fullscreen =() => ({
 const exitfullscreen =() => ({
     type: 'EXITFULLSCREEN'
 })
+const addnodetodberror =() => ({
+        type: 'ADDNODE_DBERROR'
+    })
 
 
 export {
     addnode,
     clearcanvas,
     fullscreen,
-    exitfullscreen
+    exitfullscreen,
+    addnodetodberror
 }

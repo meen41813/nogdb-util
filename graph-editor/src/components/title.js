@@ -6,7 +6,7 @@ class NogDBTitle extends Component {
        
 
         return (
-            <div className='App-intro'> Title NogDB</div>
+            <div className='App-intro'>  NogDB</div>
         )
     }
 }
