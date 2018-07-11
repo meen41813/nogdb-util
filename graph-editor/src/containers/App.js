@@ -10,7 +10,7 @@ import Console from '../components/console';
 import Canvas from '../components/canvas';
 import History from '../components/history';
 import { connect} from 'react-redux';
-import {addnode} from '../actions/addnodeAction'
+import {addnode,clearcanvas,fullscreen,exitfullscreen} from '../actions/mainButtonAction'
 import NodePropertyMenu from '../components/menu';
 
 const customStyle = {
@@ -68,7 +68,9 @@ const customCreateEdgeModal = {
 
   const mapStateToProps = state => {
     return {
-      graph:state.graph
+      graph:state.graph,
+      scale:state.scale,
+      data:state.data
     }
   }
 
@@ -76,7 +78,17 @@ const customCreateEdgeModal = {
     return {
       onAddnode: newNode => {
         dispatch (addnode(newNode))
+      },
+      onClearCanvas : nullCanvas => {
+        dispatch (clearcanvas(nullCanvas))
+      },
+      onSetFullSceen :() => {
+        dispatch (fullscreen())
+      },
+      onExitFullScreen : () => {
+        dispatch (exitfullscreen())
       }
+      
     }
   }
 
@@ -99,7 +111,7 @@ class App extends Component {
       isEditRelationActive:false,
       page: 1,
       showMenu: false,
-      isFullscreen: false,
+      // isFullscreen: false,
       nodeID: " ",
       relationID: " ",
       prevNodeID: " ",
@@ -125,9 +137,9 @@ class App extends Component {
     // this.handleDscChange = this.handleDscChange.bind(this);
     this.handleEditNodeName = this.handleEditNodeName.bind(this);
     // this.AddEdgeToCanvas = this.AddEdgeToCanvas.bind(this);
-    // this.handleClearCanvas = this.handleClearCanvas.bind(this);
+     this.handleClearCanvas = this.handleClearCanvas.bind(this);
     // this.toggleShowMenu = this.toggleShowMenu.bind(this);
-    // this.handleFullscreen = this.handleFullscreen.bind(this);
+      this.handleFullscreen = this.handleFullscreen.bind(this);
     // this.handleNodeID = this.handleNodeID.bind(this);
     // this.handleNodeClass = this.handleNodeClass.bind(this);
     // this.handleIncoming = this.handleIncoming.bind(this);
@@ -171,6 +183,7 @@ class App extends Component {
     // this.setmessageDisplayFormat = this.setmessageDisplayFormat.bind(this);
    
   }
+  
   handleAddNodebutton() {
     let newNode = 
       [{
@@ -179,9 +192,9 @@ class App extends Component {
         group: this.state.group
       }]
     ;
+   
 
     this.props.onAddnode(newNode)
-      
     // this.AddNodeToDatabase(newNode);
     // this.AddNodeToCanvas(newNode, this.state.graph.edges);
     this.toggleModalAddNode();
@@ -225,13 +238,47 @@ class App extends Component {
           editnodename: e.target.value
         });
       }
+
+  handleClearCanvas() {
+      let nullgraph ={
+        nodes:[],
+        edges:[]
+      }
+        this.props.onClearCanvas(nullgraph)
+        this.setState({ graph: { nodes: [], edges: [] } });
+      }
+  handleFullscreen = () => {
+    $("#Canvas").addClass("CanvasFullScreen");
+    this.setState(prevState => ({
+      isFullscreen: !prevState.isFullscreen
+    }));
+  };
   render() {
-    const {graph,AddnodeDispatch} = this.props;
+    const {graph,scale} = this.props;
+    let pheader;
+    if (scale.isFullscreen === true) {
+      pheader = null;
+    } else {
+       pheader = <NogDBTitle/>
+    }
+    let consolebox;
+    if (scale.isFullscreen === true) {
+      consolebox = null;
+    } else {
+      consolebox = <Console/>
+    }
+    let historybox;
+    if (scale.isFullscreen === true){
+      historybox = null;
+    } else {
+      historybox = <History/>
+    }
+   
     return(
       <div id='test-div'>
-      <NogDBTitle/>
-      <Console/>
+      {pheader}
       {/* <NodePropertyMenu/> */}
+      {consolebox}
 
 
 
@@ -239,7 +286,7 @@ class App extends Component {
         <Modal
           isOpen={this.state.isAddNodeActive}
           contentLabel="addnode Modal"
-          onRequestClose={this.state.toggleModal}
+          onRequestClose={this.toggleModalAddNode}
           style={customAddNodeStyle}
         >
          
@@ -299,45 +346,16 @@ class App extends Component {
             </div>
           )}
         </Modal>
-
-        <button id="Edge-modal" onClick={this.toggleModalCreateEdge}>
-          Create edge
-        </button>
-        <Modal
-          isOpen={this.state.isCreateEdgeActive}
-          contentLabel="CreateEdge modal "
-          onRequestClose={this.state.toggleModal2}
-          style={customCreateEdgeModal}
-        >
-          <div id="edge-top-div"> CreateEdge window</div>
-          <div id="edge-middle-div">
-           
-            hello middle edge1
-            <input
-              type="src-Edge"
-              placeholder="Src-Edge..."
-              className="src_Edgetxt"
-              onChange={this.handleSrcChange}
-            />
-            <input
-              type="dsc-Edge"
-              placeholder="Dsc-Edge..."
-              className="dsc_Edgetxt"
-              onChange={this.handleDscChange}
-            />
-          </div>
-          <div id="edge-bottom-div">
-            <button id="cancel-edge" onClick={this.toggleModalCreateEdge}>
-              Cancel{" "}
-            </button>
-            <button id="Edge-button" onClick={this.handleCreateEdgebutton}>
-              Create edge2
-            </button>
-          </div>
-        </Modal>
-        <button id="FullScreen-button" onClick={this.handleFullscreen}>
+        { scale.isFullscreen === false ? (
+        <button id="FullScreen-button" onClick={this.props.onSetFullSceen}>
           Full screen
         </button>
+        ) : (
+          <button id="FullScreen-button" onClick={this.props.onExitFullScreen}>
+          Exit Fullscreen
+        </button>
+        )
+        }
         <button id="Clear-Canvas" onClick={this.handleClearCanvas}>
          Clear Canvas
         </button>
@@ -348,8 +366,8 @@ class App extends Component {
         state = {graph}
     
       />
-     
-      <History/>
+   
+      {historybox}
       </div>
     );
   }
@@ -786,9 +804,7 @@ export default connect(
 //     console.log(graphDB);
 //   };
 
-//   handleClearCanvas() {
-//     this.setState({ graph: { nodes: [], edges: [] } });
-//   }
+  
 //   toggleFullScreen() {
 //     if (
 //       (document.fullScreenElement && document.fullScreenElement !== null) ||
@@ -815,11 +831,7 @@ export default connect(
 //   }
  
 
-//   toggleModalCreateEdge = () => {
-//     this.setState({
-//       isCreateEdgeActive: !this.state.isCreateEdgeActive
-//     });
-//   };
+
 //   toggleEditnodeModal = () => {
 //     this.setState({
 //       isEditNodeActive: !this.state.isEditNodeActive
@@ -845,20 +857,15 @@ export default connect(
 //       showMenu: !prevState.showMenu
 //     }));
 //   };
-//   handleFullscreen = () => {
-//     $("#Canvas").addClass("CanvasFullScreen");
-//     this.setState(prevState => ({
-//       isFullscreen: !prevState.isFullscreen
-//     }));
-//   };
+
 
   
-//   handleNodeID(nodeIDs) {
-//     this.setState({
-//       nodeID: nodeIDs[0]
-//     });
-//     console.log(this.state.nodeID);
-//   }
+  // handleNodeID(nodeIDs) {
+  //   this.setState({
+  //     nodeID: nodeIDs[0]
+  //   });
+  //   console.log(this.state.nodeID);
+  // }
 //   handleNodeID2 = nodeIDs => {
 //     this.setState(prevState => ({
 //       nodeID: nodeIDs[0],
@@ -1137,12 +1144,7 @@ export default connect(
 //     });
 //   };
 //   render() {
-//     let pheader;
-//     if (this.state.isFullscreen === true) {
-//       pheader = null;
-//     } else {
-//       pheader = <p className="App-intro"> NogDB Graph UI </p>;
-//     }
+
 
 //     let tabbars;
 //     if (this.state.isPropertyDisplay === "nodeTrue") {
@@ -1306,16 +1308,7 @@ export default connect(
 //       null;
 //     }
 
-//     let consolebox;
-//     if (this.state.isFullscreen === true) {
-//       consolebox = null;
-//     } else {
-//       consolebox = (
-//         <div className="Top-Box" align="center">
-//           Limit
-//         </div>
-//       );
-//     }
+
 //     let alertmsg;
 //     if (this.state.isAlertShow === true) {
 //       alertmsg = (
@@ -1582,32 +1575,29 @@ export default connect(
             //   graph={this.state.graph}
             //   options={this.state.options}
             //   events={{
-            //     select: function(event) {
-            //       console.log("This is Select");
-            //     },
-            //     selectNode: function(event) {
-            //       if (this.state.createEdgeMode === false) {
-            //         this.handleNodeID(event.nodes);
-            //       } else {
-            //         this.handleNodeID2(event.nodes);
-            //       }
-            //       if (this.state.createEdgeMode === true) {
-            //         const src = this.state.prevNodeID.toString();
-            //         const dest = this.state.nodeID.toString();
-            //         this.setSrcEdge(src);
-            //         this.setDecEdge(dest);
-            //         this.toggleCreateRelationModalTrue();
-            //         this.state.createEdgeMode = false;
-            //       }
+                // selectNode: function(event) {
+                //   if (this.state.createEdgeMode === false) {
+                //     this.handleNodeID(event.nodes);
+                //   } else {
+                //     this.handleNodeID2(event.nodes);
+                //   }
+                //   if (this.state.createEdgeMode === true) {
+                //     const src = this.state.prevNodeID.toString();
+                //     const dest = this.state.nodeID.toString();
+                //     this.setSrcEdge(src);
+                //     this.setDecEdge(dest);
+                //     this.toggleCreateRelationModalTrue();
+                //     this.state.createEdgeMode = false;
+                //   }
 
-            //       //this.handleNodeID(event.nodes);
-            //       this.handleNodeClass();
-            //       this.getNodeName();
-            //       // this.getCreateDate();
-            //       this.toggleShowMenu();
-            //       this.setDisplayprop();
-            //       console.log(this.state.isPropertyDisplay);
-            //     }.bind(this),
+                //   //this.handleNodeID(event.nodes);
+                //   this.handleNodeClass();
+                //   this.getNodeName();
+                //   // this.getCreateDate();
+                //   this.toggleShowMenu();
+                //   this.setDisplayprop();
+                //   console.log(this.state.isPropertyDisplay);
+                // }.bind(this),
 
             //     deselectNode: function(event) {
             //       console.log(event), this.toggleShowMenu();
