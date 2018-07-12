@@ -1,9 +1,23 @@
 import React, { Component } from "react";
 import Graph from "react-graph-vis";
 import { connect } from "react-redux";
-import {getNodeID,getNodeClass,getNodename,getEdgeID} from '../actions/dataAction.js';
-import {getEdgeClass,getInRelation,getOutRelation} from '../actions/dataAction.js';
-import {showNodeMenu,hideNodeMenu,showEdgeMenu,hideEdgeMenu,} from '../actions/node-edgesmenu';
+import {
+  getNodeID,
+  getNodeClass,
+  getNodename,
+  getEdgeID
+} from "../actions/dataAction.js";
+import {
+  getEdgeClass,
+  getInRelation,
+  getOutRelation
+} from "../actions/dataAction.js";
+import {
+  showNodeMenu,
+  hideNodeMenu,
+  showEdgeMenu,
+  hideEdgeMenu
+} from "../actions/node-edgesmenu";
 import { removeNode } from "../actions/menuAction";
 import Modal from "react-modal";
 import {
@@ -34,22 +48,22 @@ const mapDispatchToProps = dispatch => {
       dispatch(getNodeID(NodeID));
     },
     GetEdgeID: EdgeID => {
-      dispatch (getEdgeID(EdgeID))
+      dispatch(getEdgeID(EdgeID));
     },
-    GetNodeClass :NodeClass => {
-      dispatch (getNodeClass(NodeClass))
+    GetNodeClass: NodeClass => {
+      dispatch(getNodeClass(NodeClass));
     },
-    GetEdgeClass :EdgeClass => {
-      dispatch (getEdgeClass(EdgeClass))
+    GetEdgeClass: EdgeClass => {
+      dispatch(getEdgeClass(EdgeClass));
     },
-    GetinRelation :number => {
-      dispatch (getInRelation(number))
+    GetinRelation: number => {
+      dispatch(getInRelation(number));
     },
-    GetoutRelation:number => {
-      dispatch (getOutRelation(number))
+    GetoutRelation: number => {
+      dispatch(getOutRelation(number));
     },
-    GetNodeName : NodeName => {
-      dispatch (getNodename(NodeName))
+    GetNodeName: NodeName => {
+      dispatch(getNodename(NodeName));
     },
     ShowNodeMenu: () => {
       dispatch(showNodeMenu());
@@ -133,56 +147,61 @@ class Canvas extends Component {
   handleNodeID(nodeIDs) {
     this.props.GetNodeID(nodeIDs[0]);
   }
-  
+
   handleGetNodeName = () => {
     for (let ele in this.props.graph.graphCanvas.nodes) {
-      if (this.props.graph.graphCanvas.nodes[ele].id === this.props.data.nodeID) {
-
-        this.props.GetNodeName(this.props.graph.graphCanvas.nodes[ele].label)
+      if (
+        this.props.graph.graphCanvas.nodes[ele].id === this.props.data.nodeID
+      ) {
+        this.props.GetNodeName(this.props.graph.graphCanvas.nodes[ele].label);
       }
     }
   };
   handleNodeClass = () => {
     for (let ele in this.props.graph.graphCanvas.nodes) {
-      if (this.props.graph.graphCanvas.nodes[ele].id === this.props.data.nodeID) {
-          // this.setState({
-          //   nodeClass: this.state.graph.nodes[ele].group
-          // });
-        this.props.GetNodeClass(this.props.graph.graphCanvas.nodes[ele].group)
-      }
-    }
-  };  
-
-  handlerelationID = (relaID) => {
-    this.props.GetEdgeID(relaID[0])
-    };
-
-  getinRelationNode = () => {
-    for (let ele in this.props.graph.graphCanvas.edges) {
-      if (this.props.graph.graphCanvas.edges[ele].id === this.props.data.edgeID) {
-        this.props.GetinRelation(this.props.graph.graphCanvas.edges[ele].to)
-          
-      }
-    }
-  }; 
-    
-  getoutRelationNode = () => {
-    for (let ele in this.props.graph.graphCanvas.edges) {
-      if (this.props.graph.graphCanvas.edges[ele].id === this.props.data.edgeID) {
-        this.props.GetoutRelation(this.props.graph.graphCanvas.edges[ele].from)
-      
+      if (
+        this.props.graph.graphCanvas.nodes[ele].id === this.props.data.nodeID
+      ) {
+        // this.setState({
+        //   nodeClass: this.state.graph.nodes[ele].group
+        // });
+        this.props.GetNodeClass(this.props.graph.graphCanvas.nodes[ele].group);
       }
     }
   };
-  
-  setDisplayFormat = (dumb) => {
+
+  handlerelationID = relaID => {
+    this.props.GetEdgeID(relaID[0]);
+  };
+
+  getinRelationNode = () => {
+    for (let ele in this.props.graph.graphCanvas.edges) {
+      if (
+        this.props.graph.graphCanvas.edges[ele].id === this.props.data.edgeID
+      ) {
+        this.props.GetinRelation(this.props.graph.graphCanvas.edges[ele].to);
+      }
+    }
+  };
+
+  getoutRelationNode = () => {
+    for (let ele in this.props.graph.graphCanvas.edges) {
+      if (
+        this.props.graph.graphCanvas.edges[ele].id === this.props.data.edgeID
+      ) {
+        this.props.GetoutRelation(this.props.graph.graphCanvas.edges[ele].from);
+      }
+    }
+  };
+
+  setDisplayFormat = dumb => {
     this.setState(prevState => {
       let canvasNode = this.props.graph.graphCanvas.nodes.slice();
       let canvasEdge = this.props.graph.grapCanvas.edges.slice();
       let BackupGraph = this.props.graph.graphCanvas.nodes.slice();
       let backUp;
       for (let ele in BackupGraph.nodes) {
-        if ( BackupGraph.nodes[ele].id === this.props.data.nodeID) {      
+        if (BackupGraph.nodes[ele].id === this.props.data.nodeID) {
           backUp = BackupGraph.nodes[ele];
           break;
         }
@@ -210,7 +229,7 @@ class Canvas extends Component {
     this.props.RemoveNode(this.props.data.nodeID);
   };
   render() {
-    const {state, scale, data} = this.props;
+    const { state, scale, data } = this.props;
     let commandbox;
     if (scale.NodeMenu === true) {
       commandbox = (
@@ -262,7 +281,7 @@ class Canvas extends Component {
                            <br />
                           
                            <form action="/action_page.php">
-                             CreateDate: <input type="date" name="bday" />{" "}
+                             CreateDate: <input type="date" name="bday" />
                              <input type="submit" />
                              <input type="time" id="myTime" value="22:15:00" />
                              <select id="select-nodetype">       
@@ -276,7 +295,7 @@ class Canvas extends Component {
                        <div id="edge-bottom-div">
                          <br />
                          <button id="cancel-edge" onClick={this.toggleEditnodeModal}>
-                           Cancel{" "}
+                           Cancel
                          </button>
                          <button id="Edge-button" onClick={this.updateNodeName}>
                            Save Change
@@ -367,18 +386,21 @@ class Canvas extends Component {
       );
     } else if (scale.NodeMenu === false) {
       commandbox = null;
-    } 
+    }
     let relationbox;
 
-             if (scale.EdgeMenu === true) {
-              relationbox = (
-                <div id="relationMenu-div">
-                  Relationship Menu : 
-                  {/* {this.state.relationID} */}
-                  <button 
-                  // onClick={this.toggleEditRelationModal}
-                  > Edit Relationship </button>
-                {/* <Modal isOpen={this.state.isEditRelationActive} contentLabel = "EditRelationship Modal" 
+    if (scale.EdgeMenu === true) {
+      relationbox = (
+        <div id="relationMenu-div">
+          Relationship Menu :
+          {/* {this.state.relationID} */}
+          <button
+          // onClick={this.toggleEditRelationModal}
+          >
+            
+            Edit Relationship
+          </button>
+          {/* <Modal isOpen={this.state.isEditRelationActive} contentLabel = "EditRelationship Modal" 
                             onRequestClose={this.toggleEditRelationModal}
                             style = {customEditRStyle} > <div id="editRModal-header">  Edit Relationship 
                      <button id="hidemodal-button" onClick={this.toggleEditRelationModal}>Hide Modal</button>
@@ -403,12 +425,12 @@ class Canvas extends Component {
         
                        
                      </Modal> */}
-                  <button 
-                  // onClick={this.toggleDeleteRelationModal}
-                  >
-                    Delete Relationship
-                  </button>
-                  {/* <Modal
+          <button
+          // onClick={this.toggleDeleteRelationModal}
+          >
+            Delete Relationship
+          </button>
+          {/* <Modal
                     isOpen={this.state.isDeleteRelationActivate}
                     contentLabel="DeleteRelationModal"
                     onRequestClose={this.toggleDeleteRelationModal}
@@ -431,11 +453,11 @@ class Canvas extends Component {
                       </Button>
                     </div>
                   </Modal> */}
-                </div>
-              );
-            } else if (scale.EdgeMenu === false) {
-              relationbox = null;
-            }
+        </div>
+      );
+    } else if (scale.EdgeMenu === false) {
+      relationbox = null;
+    }
 
     return (
       <div className="Canvas" align="center">
@@ -468,14 +490,12 @@ class Canvas extends Component {
               this.handleGetNodeName();
               this.handleNodeClass();
               // this.getCreateDate();
-            }.bind(this)  ,
+            }.bind(this),
             deselectNode: function(event) {
-              console.log(event), 
-              this.props.HideNodeMenu();
+              console.log(event), this.props.HideNodeMenu();
               // this.handleAlertFalse();
               // this.toggleCreateRAlertmsgFalse();
             }.bind(this),
-
 
             selectEdge: function(event) {
               this.handlerelationID(event.edges);
@@ -485,13 +505,12 @@ class Canvas extends Component {
               this.props.HideNodeMenu();
               // this.setDisplayEdge();
             }.bind(this),
-            deselectEdge: function(event) {          
+            deselectEdge: function(event) {
               // this.toggleRelationMenu();
               this.props.HideEdgeMenu();
 
               // this.setHideEdge();
               // this.setHideprop();
-              
             }.bind(this)
           }}
         />
