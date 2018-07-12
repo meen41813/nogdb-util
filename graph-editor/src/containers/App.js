@@ -3,7 +3,7 @@ import Modal from "react-modal";
 import $ from "jquery";
 import "./App.css";
 import { Alert } from "reactstrap";
-import {TabContent,TabPane,Nav,NavItem,NavLink,Card,Button,CardTitle,CardText,Row,Col} from "reactstrap";
+import {TabContent,TabPane,Nav,NavItem,NavLink,Card,Button,CardTitle,CardText,Row,Col,Container} from "reactstrap";
 import classnames from "classnames";
 import NogDBTitle from '../components/Title';
 import Console from '../components/Console';
@@ -285,16 +285,50 @@ class App extends Component {
     
    
     return(
-      <div id='test-div'>
+      <Container>
       {pHeader}
+      <Row>
+        <Col md={scale.nodeMenu || scale.EdgeMenu ? 3 : 0}>
+          {nodeTabBars} {edgeTabBars}
+        </Col>
+        <Col md={scale.nodeMenu || scale.EdgeMenu ? 9 : 12}>
+          {consoleBox}
+          <div>
+            <button id="Addnode-modal" onClick={this.toggleModalAddNode}>Add node</button>
+            
+            { scale.isFullscreen === false ? (
+              <button id="FullScreen-button" onClick={this.props.onSetFullSceen}>
+                Full screen
+              </button>
+              ) : (
+                <button id="FullScreen-button" onClick={this.props.onExitFullScreen}>
+                Exit Fullscreen
+              </button>
+              )
+            }
+            <button id="Clear-Canvas" onClick={this.handleClearCanvas}>
+            Clear Canvas
+            </button>
+          </div>
+        
+          <Canvas state = {graph}/>
+          {historyBox}
+        </Col>
+
+
+        
+      </Row>
       {/* <NodePropertyMenu/> */}
-      {nodeTabBars} {edgeTabBars}
-      {consoleBox}
+      
 
 
 
-      <button id="Addnode-modal" onClick={this.toggleModalAddNode}>Add node</button>
-        <Modal
+      
+
+          
+      
+   
+          <Modal
           isOpen={this.state.isAddNodeActive}
           contentLabel="addnode Modal"
           onRequestClose={this.toggleModalAddNode}
@@ -357,29 +391,7 @@ class App extends Component {
             </div>
           )}
         </Modal>
-        { scale.isFullscreen === false ? (
-        <button id="FullScreen-button" onClick={this.props.onSetFullSceen}>
-          Full screen
-        </button>
-        ) : (
-          <button id="FullScreen-button" onClick={this.props.onExitFullScreen}>
-          Exit Fullscreen
-        </button>
-        )
-        }
-        <button id="Clear-Canvas" onClick={this.handleClearCanvas}>
-         Clear Canvas
-        </button>
-
-
-          
-      <Canvas
-        state = {graph}
-    
-      />
-   
-      {historyBox}
-      </div>
+      </Container>
     );
   }
 }

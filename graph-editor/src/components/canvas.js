@@ -145,7 +145,6 @@ class Canvas extends Component {
     this.setDisplayFormat = this.setDisplayFormat.bind(this);
   }
   handleNodeID(nodeIDs) {
-    console.log("dsd")
     this.props.getNodeIDActionCreator(nodeIDs[0]);
   }
 
