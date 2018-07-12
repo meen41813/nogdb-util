@@ -1,6 +1,6 @@
-const removenode = (NodeID)=>({
+const removeNode = (nodeID)=>({
     type: 'REMOVE_NODE',
-    payload: NodeID
+    payload: nodeID
 })
 
-export {removenode}
+export {removeNode}

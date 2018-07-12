@@ -1,26 +1,26 @@
-const addnode = (newnode) => ({
-    type: 'ADDNODEACTION',
-    payload:newnode
+const addNode = (newNode) => ({
+    type: 'ADD_NODE_ACTION',
+    payload:newNode
 })
-const clearcanvas = (nullcanvas) => ({
-    type: 'CLEARCANVAS',
-    payload:nullcanvas
+const clearCanvas = (nullCanvas) => ({
+    type: 'CLEAR_CANVAS',
+    payload:nullCanvas
 })
 const fullscreen =() => ({
-    type: 'SETFULLSCREEN',
+    type: 'SET_FULLSCREEN',
 })
-const exitfullscreen =() => ({
-    type: 'EXITFULLSCREEN'
+const exitFullscreen =() => ({
+    type: 'EXIT_FULLSCREEN'
 })
-const addnodetodberror =() => ({
-        type: 'ADDNODE_DBERROR'
+const addNodeToDBError =() => ({
+        type: 'ADD_NODE_DB_ERROR'
     })
 
 
 export {
-    addnode,
-    clearcanvas,
+    addNode,
+    clearCanvas,
     fullscreen,
-    exitfullscreen,
-    addnodetodberror
+    exitFullscreen,
+    addNodeToDBError
 }

@@ -10,7 +10,7 @@ import Console from '../components/console';
 import Canvas from '../components/canvas';
 import History from '../components/history';
 import { connect} from 'react-redux';
-import {addnode,clearcanvas,fullscreen,exitfullscreen} from '../actions/mainButtonAction'
+import {addNode,clearCanvas,fullscreen,exitFullscreen} from '../actions/mainButtonAction'
 import NodePropertyMenu from '../components/nodepropsmenu';
 import EdgePropertyMenu from '../components/edgepropsmenu';
 
@@ -78,16 +78,16 @@ const customCreateEdgeModal = {
   const mapDispatchToProps = dispatch => {
     return {
       onAddnode: newNode => {
-        dispatch (addnode(newNode))
+        dispatch (addNode(newNode))
       },
       onClearCanvas : nullCanvas => {
-        dispatch (clearcanvas(nullCanvas))
+        dispatch (clearCanvas(nullCanvas))
       },
       onSetFullSceen :() => {
         dispatch (fullscreen())
       },
       onExitFullScreen : () => {
-        dispatch (exitfullscreen())
+        dispatch (exitFullscreen())
       }
       
     }
@@ -180,7 +180,7 @@ class App extends Component {
   handleAddNodebutton() {
     let newNode = 
       [{
-        id: this.state.textvalue,
+        id: (this.props.graph.graphCanvas.nodes.length+1).toString(),
         label: this.state.textvalue,
         group: this.state.group
       }]

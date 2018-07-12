@@ -1,32 +1,31 @@
-const shownodemenu = () => ({
-    type: 'SHOWNODEMENU',
-    
+const showNodeMenu = () => ({
+    type: 'SHOW_NODE_MENU',
 })
-const hidenodemenu = () => ({
-    type: 'HIDENODEMENU',
+const hideNodeMenu = () => ({
+    type: 'HIDE_NODE_MENU',
 })
-const showedgemenu = () => ({
-    type: 'SHOWEDGEMENU',
+const showEdgeMenu = () => ({
+    type: 'SHOW_EDGE_MENU',
 })
-const hideedgemenu = () => ({
-    type: 'HIDEEDGEMENU',
+const hideEdgeMenu = () => ({
+    type: 'HIDE_EDGE_MENU',
 })
-const changesizes = (nodeID,sizes)=>({
-    type: 'EDITSIZE',
-    nodeid: nodeID,
+const changeSizes = (nodeID,sizes)=>({
+    type: 'EDIT_SIZE',
+    nodeID: nodeID,
     size:sizes
 })
-const changecolornode = (nodeID,color)=>({
+const changeColorNode = (nodeID,color)=>({
     type:'CHANGE_COLOR_NODE',
     nodeid: nodeID,
     color:color
 })
 
 export {
-    shownodemenu,
-    hidenodemenu,
-    showedgemenu,
-    hideedgemenu,
-    changesizes,
-    changecolornode,
+    showNodeMenu,
+    hideNodeMenu,
+    showEdgeMenu,
+    hideEdgeMenu,
+    changeSizes,
+    changeColorNode,
 }

@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import Graph from "react-graph-vis";
 import { connect } from "react-redux";
-import {getnodeid,getnodeclass,getnodename,getedgeid} from '../actions/dataAction.js';
-import {getedgeclass,getinrelation,getoutrelation} from '../actions/dataAction.js';
-import {shownodemenu,hidenodemenu,showedgemenu,hideedgemenu,} from '../actions/node-edgesmenu';
-import { removenode } from "../actions/menuAction";
+import {getNodeID,getNodeClass,getNodename,getEdgeID} from '../actions/dataAction.js';
+import {getEdgeClass,getInRelation,getOutRelation} from '../actions/dataAction.js';
+import {showNodeMenu,hideNodeMenu,showEdgeMenu,hideEdgeMenu,} from '../actions/node-edgesmenu';
+import { removeNode } from "../actions/menuAction";
 import Modal from "react-modal";
 import {
   TabContent,
@@ -31,40 +31,40 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     GetNodeID: NodeID => {
-      dispatch(getnodeid(NodeID));
+      dispatch(getNodeID(NodeID));
     },
     GetEdgeID: EdgeID => {
-      dispatch (getedgeid(EdgeID))
+      dispatch (getEdgeID(EdgeID))
     },
     GetNodeClass :NodeClass => {
-      dispatch (getnodeclass(NodeClass))
+      dispatch (getNodeClass(NodeClass))
     },
     GetEdgeClass :EdgeClass => {
-      dispatch (getedgeclass(EdgeClass))
+      dispatch (getEdgeClass(EdgeClass))
     },
     GetinRelation :number => {
-      dispatch (getinrelation(number))
+      dispatch (getInRelation(number))
     },
     GetoutRelation:number => {
-      dispatch (getoutrelation(number))
+      dispatch (getOutRelation(number))
     },
     GetNodeName : NodeName => {
-      dispatch (getnodename(NodeName))
+      dispatch (getNodename(NodeName))
     },
     ShowNodeMenu: () => {
-      dispatch(shownodemenu());
+      dispatch(showNodeMenu());
     },
     HideNodeMenu: () => {
-      dispatch(hidenodemenu());
+      dispatch(hideNodeMenu());
     },
     ShowEdgeMenu: () => {
-      dispatch(showedgemenu());
+      dispatch(showEdgeMenu());
     },
     HideEdgeMenu: () => {
-      dispatch(hideedgemenu());
+      dispatch(hideEdgeMenu());
     },
-    RemoveNode: NodeID => {
-      dispatch(removenode(NodeID));
+    RemoveNode: nodeID => {
+      dispatch(removeNode(nodeID));
     }
   };
 };
@@ -142,35 +142,35 @@ class Canvas extends Component {
       }
     }
   };
-handleNodeClass = () => {
+  handleNodeClass = () => {
     for (let ele in this.props.graph.graphCanvas.nodes) {
       if (this.props.graph.graphCanvas.nodes[ele].id === this.props.data.nodeID) {
-        // this.setState({
-        //   nodeClass: this.state.graph.nodes[ele].group
-        // });
+          // this.setState({
+          //   nodeClass: this.state.graph.nodes[ele].group
+          // });
         this.props.GetNodeClass(this.props.graph.graphCanvas.nodes[ele].group)
       }
     }
   };  
 
-handlerelationID = (relaID) => {
-  this.props.GetEdgeID(relaID[0])
-  };
+  handlerelationID = (relaID) => {
+    this.props.GetEdgeID(relaID[0])
+    };
 
-getinRelationNode = () => {
+  getinRelationNode = () => {
     for (let ele in this.props.graph.graphCanvas.edges) {
       if (this.props.graph.graphCanvas.edges[ele].id === this.props.data.edgeID) {
         this.props.GetinRelation(this.props.graph.graphCanvas.edges[ele].to)
-        
+          
       }
     }
   }; 
-  
-getoutRelationNode = () => {
+    
+  getoutRelationNode = () => {
     for (let ele in this.props.graph.graphCanvas.edges) {
       if (this.props.graph.graphCanvas.edges[ele].id === this.props.data.edgeID) {
         this.props.GetoutRelation(this.props.graph.graphCanvas.edges[ele].from)
-       
+      
       }
     }
   };
@@ -485,9 +485,7 @@ getoutRelationNode = () => {
               this.props.HideNodeMenu();
               // this.setDisplayEdge();
             }.bind(this),
-            deselectEdge: function(event) {
-              //console.log(event);
-              //console.log("This is popup!!")
+            deselectEdge: function(event) {          
               // this.toggleRelationMenu();
               this.props.HideEdgeMenu();
 
@@ -501,7 +499,6 @@ getoutRelationNode = () => {
     );
   }
 }
-
 export default connect(
   mapStateToProps,
   mapDispatchToProps

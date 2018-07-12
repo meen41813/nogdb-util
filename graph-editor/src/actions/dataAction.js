@@ -1,47 +1,45 @@
-const getnodeid = (eventNodeID) => ({
-    type: 'GETNODEID',
-    payload:eventNodeID
-})
-const getedgeid = (EdgeID) => ({
-    type: 'GETEDGEID',
-    payload:EdgeID
-})
-const getnodeclass = (NodeClass) => ({
-    type: 'GETNODECLASS',
-    payload:NodeClass
-})
-const getnodename = (NodeName) => ({
-    type: 'GETNODENAME',
-    payload:NodeName
-})
+const getNodeID = eventNodeID => ({
+  type: 'GET_NODE_ID',
+  payload: eventNodeID
+});
+const getEdgeID = edgeID => ({
+  type: 'GET_EDGE_ID',
+  payload: edgeID
+});
+const getNodeClass = nodeClass => ({
+  type: 'GET_NODE_CLASS',
+  payload: nodeClass
+});
+const getNodename = nodeName => ({
+  type: 'GET_NODE_NAME',
+  payload: nodeName
+});
 
-const getedgeclass = (EdgeClass) => ({
-    type: 'GETEDGECLASS',
-    payload:EdgeClass
-})
-const getinrelation = (InRelation) => ({
-    type: 'GETINRELATION',
-    payload:InRelation
-})
-const getoutrelation =(OutRelation) => ({
-    type: 'GETOUTRELATION',
-    payload:OutRelation
-})
-const updategraph = (newNode,newEdge) => ({
-    type: 'UPDATEGRAPH',
-    payload1:newNode,
-    payload2:newEdge
-})
-
+const getEdgeClass = edgeClass => ({
+  type: 'GET_EDGE_CLASS',
+  payload: edgeClass
+});
+const getInRelation = inRelation => ({
+  type: 'GET_IN_RELATION',
+  payload: inRelation
+});
+const getOutRelation = outRelation => ({
+  type: 'GET_OUT_RELATION',
+  payload: outRelation
+});
+const updateGraph = (newNode, newEdge) => ({
+  type: 'UPDATE_GRAPH',
+  payload1: newNode,
+  payload2: newEdge
+});
 
 export {
-    getnodeid,
-    getnodeclass,
-    getnodename,
-    getedgeid,
-    getedgeclass,
-    getinrelation,
-    getoutrelation,
-    
-    updategraph
-}
+  getNodeID,
+  getNodeClass,
+  getEdgeID,
+  getNodename,
+  getEdgeClass,
+  getInRelation,
+  getOutRelation,
+  updateGraph
+};

@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import {TabContent,TabPane,Nav,NavItem,NavLink,Card,Button,CardTitle,CardText,Row,Col} from "reactstrap";
 import classnames from "classnames";
 import { connect} from 'react-redux';
-import {getnodeid,updategraph} from '../actions/dataAction.js';
-import {shownodemenu,hidenodemenu,showedgemenu,hideedgemenu,changesizes,changecolornode} from '../actions/node-edgesmenu';
+import {getNodeID,updateGraph} from '../actions/dataAction.js';
+import {showNodeMenu,hideNodeMenu,showEdgeMenu,hideEdgeMenu,changeSizes,changeColorNode} from '../actions/node-edgesmenu';
 
 const mapStateToProps = state => {
   return {
@@ -16,29 +16,29 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     GetNodeID: NodeID => {
-      dispatch (getnodeid(NodeID))
+      dispatch (getNodeID(NodeID))
     },
     ShowNodeMenu : () => {
-        dispatch(shownodemenu())
+        dispatch(showNodeMenu())
     },
     HideNodeMenu : () => {
-        dispatch(hidenodemenu())
+        dispatch(hideNodeMenu())
     },
     ShowEdgeMenu : () => {
-      dispatch(showedgemenu())
+      dispatch(showEdgeMenu())
     },
     HideEdgeMenu : () => {
-      dispatch(hideedgemenu())
+      dispatch(hideEdgeMenu())
     },
 
     UpdateGraph : (NewNode,NewEdge) => {
-      dispatch(updategraph(NewNode,NewEdge))
+      dispatch(updateGraph(NewNode,NewEdge))
     },
     ChangeSizes : (id,size) =>{
-      dispatch(changesizes(id,size))
+      dispatch(changeSizes(id,size))
     },
     ChangeColorNode:(id,colors)=>{
-      dispatch(changecolornode(id,colors))
+      dispatch(changeColorNode(id,colors))
     }
   }
 }

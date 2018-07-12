@@ -1,6 +1,6 @@
 import { all, takeEvery, call, put } from 'redux-saga/effects'
 import { get, post } from '../services/webService'
-import { addnode,addnodetodberror } from '../actions/mainButtonAction';
+import { addNode,addNodeToDBError } from '../actions/mainButtonAction';
 
 
 function* rootSaga() {
@@ -19,9 +19,9 @@ function* rootSaga() {
 function* addNodeToDB(newNode) {
     try {
         yield call(post, 'http://google.co.th/nodes', newNode);
-        yield put(addnode(newNode));
+        yield put(addNode(newNode));
     } catch(error) {        
-         yield put(addnodetodberror(error));
+         yield put(addNodeToDBError(error));
     }
 }
 
