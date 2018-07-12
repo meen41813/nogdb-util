@@ -17,7 +17,7 @@ import {
   hideNodeMenu,
   showEdgeMenu,
   hideEdgeMenu
-} from "../actions/node-edgesmenu";
+} from "../actions/nodeEdgesMenu";
 import { removeNode } from "../actions/menuAction";
 import Modal from "react-modal";
 import {

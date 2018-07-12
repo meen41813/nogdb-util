@@ -72,6 +72,7 @@ const graphCanvasReducer = (state = graphSetting, action) => {
     case "ADD_NODE_ACTION":
       const newGraphNodeCanvas = state.graphCanvas.nodes.slice();
       const newGraphEdgeCanvas = state.graphCanvas.edges.slice();
+      console.log(action)
       for (let ele in action.payload) {
         if (
           JSON.stringify(newGraphNodeCanvas).includes(
@@ -81,12 +82,14 @@ const graphCanvasReducer = (state = graphSetting, action) => {
           newGraphNodeCanvas.push(action.payload[ele]);
         }
       }
+      console.log(newGraphNodeCanvas)
       return {
         ...state,
         graphCanvas: {
           nodes: newGraphNodeCanvas,
           edges: newGraphEdgeCanvas
         }
+        
       };
       break;
     case "CLEAR_CANVAS":

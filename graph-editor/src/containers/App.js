@@ -5,14 +5,14 @@ import "./App.css";
 import { Alert } from "reactstrap";
 import {TabContent,TabPane,Nav,NavItem,NavLink,Card,Button,CardTitle,CardText,Row,Col} from "reactstrap";
 import classnames from "classnames";
-import NogDBTitle from '../components/title';
-import Console from '../components/console';
-import Canvas from '../components/canvas';
-import History from '../components/history';
+import NogDBTitle from '../components/Title';
+import Console from '../components/Console';
+import Canvas from '../components/Canvas';
+import History from '../components/History';
 import { connect} from 'react-redux';
 import {addNode,clearCanvas,fullscreen,exitFullscreen} from '../actions/mainButtonAction'
-import NodePropertyMenu from '../components/nodepropsmenu';
-import EdgePropertyMenu from '../components/edgepropsmenu';
+import NodePropertyMenu from '../components/NodePropsMenu';
+import EdgePropertyMenu from '../components/EdgePropsMenu';
 
 //testhello
 const customStyle = {
@@ -189,6 +189,9 @@ class App extends Component {
    
 
     this.props.onAddNode(newNode)
+    this.setState({
+      textValue: ""
+    })
     // this.AddNodeToDatabase(newNode);
     // this.AddNodeToCanvas(newNode, this.state.graph.edges);
     this.toggleModalAddNode();

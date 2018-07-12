@@ -3,7 +3,7 @@ import {TabContent,TabPane,Nav,NavItem,NavLink,Card,Button,CardTitle,CardText,Ro
 import classnames from "classnames";
 import { connect} from 'react-redux';
 import {getNodeID,updateGraph} from '../actions/dataAction.js';
-import {showNodeMenu,hideNodeMenu,showEdgeMenu,hideEdgeMenu,changeSizes,changeColorNode} from '../actions/node-edgesmenu';
+import {showNodeMenu,hideNodeMenu,showEdgeMenu,hideEdgeMenu,changeSizes,changeColorNode} from '../actions/nodeEdgesMenu';
 
 const mapStateToProps = state => {
   return {
