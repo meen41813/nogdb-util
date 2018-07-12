@@ -1,51 +1,51 @@
-const ComponentScale = {
-    isFullscreen : false,
-    NodeMenu : false,
-    EdgeMenu : false
+const componentScale = {
+    isFullScreen : false,
+    nodeMenu : false,
+    edgeMenu : false
 }
 
-const rescaleReducer = (state = ComponentScale,action) => {
+const rescaleReducer = (state = componentScale,action) => {
     switch(action.type){
-        case 'SETFULLSCREEN':
+        case 'SET_FULLSCREEN':
         return  {
             ...state,
-            isFullscreen:true
+            isFullScreen:true
           }
           break;
         
-        case 'EXITFULLSCREEN':
+        case 'EXIT_FULLSCREEN':
         return  {
               ...state,
-              isFullscreen:false
+              isFullScreen:false
             }
             break;
 ///////////////////////////////////////////////////////////////////////
 
-        case 'SHOWNODEMENU':
+        case 'SHOW_NODE_MENU':
         return  {
               ...state,
-              NodeMenu:true
+              nodeMenu:true
             }
             break;
         
-        case 'HIDENODEMENU':
+        case 'HIDE_NODE_MENU':
         return  {
               ...state,
-              NodeMenu:false
+              nodeMenu:false
             }
             break;
 //////////////////////////////////////////////////////////////////////////
-        case 'SHOWEDGEMENU':
+        case 'SHOW_EDGE_MENU':
         return {
             ...state,
-            EdgeMenu:true
+            edgeMenu:true
         }
         break;
 
-        case 'HIDEEDGEMENU':
+        case 'HIDE_EDGE_MENU':
         return {
             ...state,
-            EdgeMenu:false
+            edgeMenu:false
         }
         break;
         
