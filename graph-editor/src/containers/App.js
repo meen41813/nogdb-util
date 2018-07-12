@@ -14,6 +14,7 @@ import {addNode,clearCanvas,fullscreen,exitFullscreen} from '../actions/mainButt
 import NodePropertyMenu from '../components/nodepropsmenu';
 import EdgePropertyMenu from '../components/edgepropsmenu';
 
+//testhello
 const customStyle = {
   content: {
     posittion: "absolute",
