@@ -15,30 +15,29 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    GetNodeID: NodeID => {
-      dispatch (getNodeID(NodeID))
+    getNodeIDActionCreator: nodeID => {
+      dispatch (getNodeID(nodeID))
     },
-    ShowNodeMenu : () => {
+    showNodeMenuActionCreator : () => {
         dispatch(showNodeMenu())
     },
-    HideNodeMenu : () => {
+    hideNodeMenuActionCreator : () => {
         dispatch(hideNodeMenu())
     },
-    ShowEdgeMenu : () => {
+    showEdgeMenuActionCreator : () => {
       dispatch(showEdgeMenu())
     },
-    HideEdgeMenu : () => {
+    hideEdgeMenuActionCreator : () => {
       dispatch(hideEdgeMenu())
     },
-
-    UpdateGraph : (NewNode,NewEdge) => {
-      dispatch(updateGraph(NewNode,NewEdge))
+    updateGraphActionCreator : (newNode,newEdge) => {
+      dispatch(updateGraph(newNode,newEdge))
     },
-    ChangeSizes : (id,size) =>{
-      dispatch(changeSizes(id,size))
+    changeSizesActionCreator : (ID,size) =>{
+      dispatch(changeSizes(ID,size))
     },
-    ChangeColorNode:(id,colors)=>{
-      dispatch(changeColorNode(id,colors))
+    changeColorNodeActionCreator:(ID,colors)=>{
+      dispatch(changeColorNode(ID,colors))
     }
   }
 }
@@ -61,31 +60,30 @@ class NodePropertyMenu extends Component {
   };
    handleSize25 = () => {
     
-    this.handlechangesize(25);
+    this.handleChangeSize(25);
    };
    handleSize50 = () => {
  
-    this.handlechangesize(50);
+    this.handleChangeSize(50);
    };
    handleSize75 = () => {
 
-    this.handlechangesize(75);
+    this.handleChangeSize(75);
    };
    handleSize100 = () => {
 
-     this.handlechangesize(100);
+     this.handleChangeSize(100);
    };
-   handlechangesize = (size) =>{
+   handleChangeSize = (size) =>{
      
-     this.props.ChangeSizes(this.props.data.nodeID,size)
+     this.props.changeSizesActionCreator(this.props.data.nodeID,size)
    }
    selectedColor = () => {
     let colors = document.getElementById("select-nodecolor").value;
-    this.props.ChangeColorNode(this.props.data.nodeID,colors)
+    this.props.changeColorNodeActionCreator(this.props.data.nodeID,colors)
        
       };
       setDisplayFormat = (dumb) => {
-        console.log(this.props.graph.graphCanvas)
           let canvasNode = this.props.graph.graphCanvas.nodes.slice();
           // let canvasEdge = this.props.graph.grapCanvas.edges.slice();
           // let BackupGraph = this.props.graph.graphCanvas.nodes.slice();
@@ -106,7 +104,7 @@ class NodePropertyMenu extends Component {
           //   }
           // }
          
-          // this.props.UpdateGraph(canvasNode,canvasEdge)
+          // this.props.UpdateGraphActionCreator(canvasNode,canvasEdge)
             
            
           
@@ -117,7 +115,7 @@ class NodePropertyMenu extends Component {
         return (
             <div className="Left-tab">
           <div id="topbar-prop">
-           Node <button onClick={this.props.HideNodeMenu}>Hide </button>
+           Node <button onClick={this.props.hideNodeMenuActionCreator}>Hide </button>
          </div>
 
          <Nav tabs>
@@ -149,7 +147,7 @@ class NodePropertyMenu extends Component {
                  <h4>Tab 1 Contents</h4>
                   @rid : {data.nodeID} <br />
                   @class : {data.nodeClass} <br />
-                  CreatedDate : {this.state.CreateDate} <br />
+                  CreatedDate : {this.state.createDate} <br />
                  name : {data.nodeName} <br />
                </Col>
                </Row>
@@ -165,7 +163,7 @@ class NodePropertyMenu extends Component {
                      className="Displayformat-text"
                   />
                   <button onClick={this.setDisplayFormat}> @rid</button>
-                  <button onClick={this.setclassDisplayFormat}>@class</button>
+                  <button onClick={this.setClassDisplayFormat}>@class</button>
                  <button> createdate </button>
                  <button onClick={this.setNameDisplayFormat}> name </button>
 

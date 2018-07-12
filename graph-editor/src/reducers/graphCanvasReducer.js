@@ -66,7 +66,7 @@ const graphSetting = {
 const graphCanvasReducer = (state = graphSetting, action) => {
   let nodeGroup;
   let externalOption = state.options.groups;
-  let nodeForSizeColor = state.graphCanvas.nodes.slice();
+  let nodeForSizeAndColor = state.graphCanvas.nodes.slice();
   let updateColor, updateGroup, updateSize;
   switch (action.type) {
     case "ADD_NODE_ACTION":
@@ -113,9 +113,9 @@ const graphCanvasReducer = (state = graphSetting, action) => {
         }
       };
     case "EDIT_SIZE":
-      for (let ele in nodeForSizeColor) {
-        if (nodeForSizeColor[ele].id === action.nodeID) {
-          nodeGroup = nodeForSizeColor[ele].group;
+      for (let ele in nodeForSizeAndColor) {
+        if (nodeForSizeAndColor[ele].id === action.nodeID) {
+          nodeGroup = nodeForSizeAndColor[ele].group;
           break;
         }
       }
@@ -151,9 +151,9 @@ const graphCanvasReducer = (state = graphSetting, action) => {
       }
 
     case "CHANGE_COLOR_NODE":
-      for (let ele in nodeForSizeColor) {
-        if (nodeForSizeColor[ele].id === action.nodeID) {
-          nodeGroup = nodeForSizeColor[ele].group;
+      for (let ele in nodeForSizeAndColor) {
+        if (nodeForSizeAndColor[ele].id === action.nodeID) {
+          nodeGroup = nodeForSizeAndColor[ele].group;
           break;
         }
       }

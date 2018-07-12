@@ -1,5 +1,5 @@
 const componentScale = {
-    isFullScreen : false,
+    isFullscreen : false,
     nodeMenu : false,
     edgeMenu : false
 }

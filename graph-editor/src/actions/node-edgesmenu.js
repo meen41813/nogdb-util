@@ -17,7 +17,7 @@ const changeSizes = (nodeID,sizes)=>({
 })
 const changeColorNode = (nodeID,color)=>({
     type:'CHANGE_COLOR_NODE',
-    node: nodeID,
+    nodeID: nodeID,
     color:color
 })
 
