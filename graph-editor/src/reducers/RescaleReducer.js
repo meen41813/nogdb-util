@@ -1,7 +1,8 @@
 const componentScale = {
     isFullscreen : false,
     nodeMenu : false,
-    edgeMenu : false
+    edgeMenu : false,
+    historyBar : false
 }
 
 const rescaleReducer = (state = componentScale,action) => {
@@ -48,8 +49,20 @@ const rescaleReducer = (state = componentScale,action) => {
             edgeMenu:false
         }
         break;
-        
+ //////////////////////////////////////////////////////////////////////////       
+        case 'DISPLAY_HISTORY':
+        return {
+             ...state,
+             historyBar:true
+        }
+         break;
 
+         case 'UNDISPLAY_HISTORY':
+         return {
+              ...state,
+              historyBar:false
+         }
+          break;
 
         default:
             state = {

@@ -5,7 +5,9 @@ import {
   getNodeID,
   getNodeClass,
   getNodename,
-  getEdgeID
+  getEdgeID,
+  dedeteNodeInDatabase,
+  deleteEdgeFromDatabase
 } from "../actions/dataAction.js";
 import {
   getEdgeClass,
@@ -18,7 +20,7 @@ import {
   showEdgeMenu,
   hideEdgeMenu
 } from "../actions/nodeEdgesMenu";
-import { removeNode } from "../actions/menuAction";
+import { removeNode,removeEdgeCanvas } from "../actions/menuAction";
 import Modal from "react-modal";
 import {
   TabContent,
@@ -79,6 +81,15 @@ const mapDispatchToProps = dispatch => {
     },
     removeNodeActionCreator: nodeID => {
       dispatch(removeNode(nodeID));
+    },
+    deleteNodeInDatabaseActionCreator: (nodeID) => {
+      dispatch(dedeteNodeInDatabase(nodeID))
+    },
+    deleteEdgeFromDatabaseActionCreator:(edgeID) => {
+      dispatch(deleteEdgeFromDatabase(edgeID))
+    },
+    removeEdgeCanvasActionCreator: (edgeID) => {
+      dispatch(removeEdgeCanvas(edgeID))
     }
   };
 };
@@ -138,11 +149,17 @@ const customCreateEdgeModal = {
 class Canvas extends Component {
   constructor(props) {
     super(props);
+    this.state= {
+      isDeleteNodeActivate:false,
+      isDeleteRelationActivate:false
+    }
     this.handleNodeID = this.handleNodeID.bind(this);
     this.handleGetNodeName = this.handleGetNodeName.bind(this);
     this.getInRelationNode = this.getInRelationNode.bind(this);
     this.getOutRelationNode = this.getOutRelationNode.bind(this);
     this.setDisplayFormat = this.setDisplayFormat.bind(this);
+    this.handleDeleteRelation = this.handleDeleteRelation.bind(this);
+
   }
   handleNodeID(nodeIDs) {
     this.props.getNodeIDActionCreator(nodeIDs[0]);
@@ -194,7 +211,7 @@ class Canvas extends Component {
     }
   };
 
-  setDisplayFormat = dumb => {
+  setDisplayFormat = () => {
     this.setState(prevState => {
       let canvasNode = this.props.graph.graphCanvas.nodes.slice();
       let canvasEdge = this.props.graph.grapCanvas.edges.slice();
@@ -227,6 +244,46 @@ class Canvas extends Component {
   handleRemoveNode = () => {
     this.props.removeNodeActionCreator(this.props.data.nodeID);
   };
+
+  toggleDeletenodeModal = () => {
+    this.setState({
+      isDeleteNodeActivate: !this.state.isDeleteNodeActivate
+    });
+  };
+
+  toggleDeleteRelationModal = () => {
+    this.setState({
+      isDeleteRelationActivate: !this.state.isDeleteRelationActivate
+    });
+  };
+
+  handleDeleteNode = () => {
+   
+    this.props.deleteNodeInDatabaseActionCreator(this.props.data.nodeID)    
+    this.props.removeNodeActionCreator(this.props.data.nodeID)
+    this.toggleDeletenodeModal();
+  };
+
+  handleDeleteRelation = () => {
+    this.props.deleteEdgeFromDatabaseActionCreator(this.props.data.edgeID)
+    this.props.removeEdgeCanvasActionCreator(this.props.data.edgeID)
+    this.toggleDeleteRelationModal();
+  };
+
+  // handleRemoveRelation = () => {
+  //   let BackupNode = this.state.graph.edges.slice();
+  //   let BackupEdges = this.state.graph.edges.slice();
+
+  //   for (let ele1 in BackupEdges) {
+  //     if (BackupEdges[ele1].id === this.state.relationID) {
+  //       BackupEdges.splice(ele1, 1);
+  //     }
+  //   }
+
+  //   this.setState({ graph: { nodes: BackupNode, edges: BackupEdges } });
+  //   this.toggleRelationMenu();
+  // };
+  
   render() {
     const { state, scale, data } = this.props;
     let commandBox;
@@ -355,11 +412,11 @@ class Canvas extends Component {
             <button
               id="deleteNode-button"
               title="delete node from Database"
-              //    onClick={this.toggleDeletenodeModal}
+                  onClick={this.toggleDeletenodeModal}
             >
               Delete
             </button>
-            {/* <Modal
+            <Modal
                        isOpen={this.state.isDeleteNodeActivate}
                        contentLabel="DeleteNodeModal"
                        onRequestClose={this.toggleDeletenodeModal}
@@ -379,7 +436,7 @@ class Canvas extends Component {
                            Yes,Delete Node!
                          </Button>
                        </div>
-                     </Modal> */}
+                     </Modal>
           </div>
         </div>
       );
@@ -425,11 +482,11 @@ class Canvas extends Component {
                        
                      </Modal> */}
           <button
-          // onClick={this.toggleDeleteRelationModal}
+          onClick={this.toggleDeleteRelationModal}
           >
             Delete Relationship
           </button>
-          {/* <Modal
+          <Modal
                     isOpen={this.state.isDeleteRelationActivate}
                     contentLabel="DeleteRelationModal"
                     onRequestClose={this.toggleDeleteRelationModal}
@@ -447,11 +504,10 @@ class Canvas extends Component {
                         No,keep Relationship
                       </button>
                       <Button color="danger" onClick={this.handleDeleteRelation}>
-                       
                         Yes,Delete Relationship!
                       </Button>
                     </div>
-                  </Modal> */}
+                  </Modal>
         </div>
       );
     } else if (scale.edgeMenu === false) {
