@@ -1,5 +1,5 @@
 const componentScale = {
-    isFullScreen : false,
+    isFullscreen : false,
     nodeMenu : false,
     edgeMenu : false
 }
@@ -9,14 +9,14 @@ const rescaleReducer = (state = componentScale,action) => {
         case 'SET_FULLSCREEN':
         return  {
             ...state,
-            isFullScreen:true
+            isFullscreen:true
           }
           break;
         
         case 'EXIT_FULLSCREEN':
         return  {
               ...state,
-              isFullScreen:false
+              isFullscreen:false
             }
             break;
 ///////////////////////////////////////////////////////////////////////

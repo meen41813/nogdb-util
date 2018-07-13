@@ -3,7 +3,7 @@ import {TabContent,TabPane,Nav,NavItem,NavLink,Card,Button,CardTitle,CardText,Ro
 import classnames from "classnames";
 import { connect} from 'react-redux';
 import {getNodeID} from '../actions/dataAction.js';
-import {showNodeMenu,hideNodeMenu,showEdgeMenu,hideEdgeMenu} from '../actions/node-edgesmenu';
+import {showNodeMenu,hideNodeMenu,showEdgeMenu,hideEdgeMenu} from '../actions/nodeEdgesMenu';
 
 
 const mapStateToProps = state => {
@@ -16,19 +16,19 @@ const mapStateToProps = state => {
 
   const mapDispatchToProps = dispatch => {
     return {
-      GetNodeID: NodeID => {
+      getNodeIDActionCreator: NodeID => {
         dispatch (getNodeID(NodeID))
       },
-      ShowNodeMenu : () => {
+      showNodeMenuActionCreator : () => {
           dispatch(showNodeMenu())
       },
-      HideNodeMenu : () => {
+      hideNodeMenuActionCreator : () => {
           dispatch(hideNodeMenu())
       },
-      ShowEdgeMenu : () => {
+      showEdgeMenuActionCreator : () => {
         dispatch(showEdgeMenu())
       },
-      HideEdgeMenu : () => {
+      hideEdgeMenuActionCreator : () => {
         dispatch(hideEdgeMenu())
       }
      
@@ -57,7 +57,7 @@ class EdgePropertyMenu extends Component {
           return (
             <div className="Left-tab">
             <div id="topbar-prop">
-              Relationship <button onClick={this.props.HideEdgeMenu}>Hide </button>
+              Relationship <button onClick={this.props.hideEdgeMenuActionCreator}>Hide </button>
             </div>
   
             <Nav tabs>
@@ -107,13 +107,13 @@ class EdgePropertyMenu extends Component {
                       placeholder="display format..."
                       className="Displayformat-text"
                     />
-                    <button onClick={this.setridRelationDisplayFormat}> @rid</button>
-                    <button onClick={this.setclassRelationDisplayFormat}>@class</button>
-                    <button onClick={this.setinRelationDisplayFormat}> in </button>
-                    <button onClick={this.setoutRelationDisplayFormat}> out </button>
-                    {/* <button onClick={this.setinRelationDisplayFormat}> inRelation </button> */}
-                    {/* <button onClick={this.setoutRelationDisplayFormat}> outRelation </button> */}
-                    <button onClick={this.setmessageDisplayFormat}> message </button>
+                    <button onClick={this.setRIDRelationDisplayFormat}> @rid</button>
+                    <button onClick={this.setClassRelationDisplayFormat}>@class</button>
+                    <button onClick={this.setInRelationDisplayFormat}> in </button>
+                    <button onClick={this.setOutRelationDisplayFormat}> out </button>
+                    {/* <button onClick={this.setInRelationDisplayFormat}> inRelation </button> */}
+                    {/* <button onClick={this.setOutRelationDisplayFormat}> outRelation </button> */}
+                    <button onClick={this.setMessageDisplayFormat}> message </button>
   
                     <br />
   

@@ -17,7 +17,7 @@ import {
   hideNodeMenu,
   showEdgeMenu,
   hideEdgeMenu
-} from "../actions/node-edgesmenu";
+} from "../actions/nodeEdgesMenu";
 import { removeNode } from "../actions/menuAction";
 import Modal from "react-modal";
 import {
@@ -44,40 +44,40 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    GetNodeID: NodeID => {
-      dispatch(getNodeID(NodeID));
+    getNodeIDActionCreator: nodeID => {
+      dispatch(getNodeID(nodeID));
     },
-    GetEdgeID: EdgeID => {
-      dispatch(getEdgeID(EdgeID));
+    getEdgeIDActionCreator: edgeID => {
+      dispatch(getEdgeID(edgeID));
     },
-    GetNodeClass: NodeClass => {
-      dispatch(getNodeClass(NodeClass));
+    getNodeClassActionCreator: nodeClass => {
+      dispatch(getNodeClass(nodeClass));
     },
-    GetEdgeClass: EdgeClass => {
-      dispatch(getEdgeClass(EdgeClass));
+    getEdgeClassActionCreator: edgeClass => {
+      dispatch(getEdgeClass(edgeClass));
     },
-    GetinRelation: number => {
+    getInRelationActionCreator: number => {
       dispatch(getInRelation(number));
     },
-    GetoutRelation: number => {
+    getOutRelationActionCreator: number => {
       dispatch(getOutRelation(number));
     },
-    GetNodeName: NodeName => {
-      dispatch(getNodename(NodeName));
+    getNodeNameActionCreator: nodeName => {
+      dispatch(getNodename(nodeName));
     },
-    ShowNodeMenu: () => {
+    showNodeMenuActionCreator: () => {
       dispatch(showNodeMenu());
     },
-    HideNodeMenu: () => {
+    hideNodeMenuActionCreator: () => {
       dispatch(hideNodeMenu());
     },
-    ShowEdgeMenu: () => {
+    showEdgeMenuActionCreator: () => {
       dispatch(showEdgeMenu());
     },
-    HideEdgeMenu: () => {
+    hideEdgeMenuActionCreator: () => {
       dispatch(hideEdgeMenu());
     },
-    RemoveNode: nodeID => {
+    removeNodeActionCreator: nodeID => {
       dispatch(removeNode(nodeID));
     }
   };
@@ -140,12 +140,12 @@ class Canvas extends Component {
     super(props);
     this.handleNodeID = this.handleNodeID.bind(this);
     this.handleGetNodeName = this.handleGetNodeName.bind(this);
-    this.getinRelationNode = this.getinRelationNode.bind(this);
-    this.getoutRelationNode = this.getoutRelationNode.bind(this);
+    this.getInRelationNode = this.getInRelationNode.bind(this);
+    this.getOutRelationNode = this.getOutRelationNode.bind(this);
     this.setDisplayFormat = this.setDisplayFormat.bind(this);
   }
   handleNodeID(nodeIDs) {
-    this.props.GetNodeID(nodeIDs[0]);
+    this.props.getNodeIDActionCreator(nodeIDs[0]);
   }
 
   handleGetNodeName = () => {
@@ -153,7 +153,7 @@ class Canvas extends Component {
       if (
         this.props.graph.graphCanvas.nodes[ele].id === this.props.data.nodeID
       ) {
-        this.props.GetNodeName(this.props.graph.graphCanvas.nodes[ele].label);
+        this.props.getNodeNameActionCreator(this.props.graph.graphCanvas.nodes[ele].label);
       }
     }
   };
@@ -165,31 +165,31 @@ class Canvas extends Component {
         // this.setState({
         //   nodeClass: this.state.graph.nodes[ele].group
         // });
-        this.props.GetNodeClass(this.props.graph.graphCanvas.nodes[ele].group);
+        this.props.getNodeClassActionCreator(this.props.graph.graphCanvas.nodes[ele].group);
       }
     }
   };
 
-  handlerelationID = relaID => {
-    this.props.GetEdgeID(relaID[0]);
+  handleRelationID = relaID => {
+    this.props.getEdgeIDActionCreator(relaID[0]);
   };
 
-  getinRelationNode = () => {
+  getInRelationNode = () => {
     for (let ele in this.props.graph.graphCanvas.edges) {
       if (
         this.props.graph.graphCanvas.edges[ele].id === this.props.data.edgeID
       ) {
-        this.props.GetinRelation(this.props.graph.graphCanvas.edges[ele].to);
+        this.props.getInRelationActionCreator(this.props.graph.graphCanvas.edges[ele].to);
       }
     }
   };
 
-  getoutRelationNode = () => {
+  getOutRelationNode = () => {
     for (let ele in this.props.graph.graphCanvas.edges) {
       if (
         this.props.graph.graphCanvas.edges[ele].id === this.props.data.edgeID
       ) {
-        this.props.GetoutRelation(this.props.graph.graphCanvas.edges[ele].from);
+        this.props.getOutRelationActionCreator(this.props.graph.graphCanvas.edges[ele].from);
       }
     }
   };
@@ -198,22 +198,21 @@ class Canvas extends Component {
     this.setState(prevState => {
       let canvasNode = this.props.graph.graphCanvas.nodes.slice();
       let canvasEdge = this.props.graph.grapCanvas.edges.slice();
-      let BackupGraph = this.props.graph.graphCanvas.nodes.slice();
-      let backUp;
-      for (let ele in BackupGraph.nodes) {
-        if (BackupGraph.nodes[ele].id === this.props.data.nodeID) {
-          backUp = BackupGraph.nodes[ele];
+      let backupGraph = this.props.graph.graphCanvas.nodes.slice();
+      let backupNode;
+      for (let ele in backupGraph.nodes) {
+        if (backupGraph.nodes[ele].id === this.props.data.nodeID) {
+          backupNode = backupGraph.nodes[ele];
           break;
         }
       }
-      let chosen;
+      let chooseNode;
       for (let ele in canvasNode) {
         if (this.state.nodeID === canvasNode[ele].id) {
-          chosen = canvasNode[ele];
+          chooseNode = canvasNode[ele];
 
-          const update = { ...chosen, label: backUp.id };
+          const update = { ...chooseNode, label: backupNode.id };
           canvasNode[ele] = update;
-          console.log(canvasNode[ele]);
         }
       }
       return {
@@ -226,13 +225,13 @@ class Canvas extends Component {
   };
 
   handleRemoveNode = () => {
-    this.props.RemoveNode(this.props.data.nodeID);
+    this.props.removeNodeActionCreator(this.props.data.nodeID);
   };
   render() {
     const { state, scale, data } = this.props;
-    let commandbox;
-    if (scale.NodeMenu === true) {
-      commandbox = (
+    let commandBox;
+    if (scale.nodeMenu === true) {
+      commandBox = (
         <div id="command-div">
           <div id="history-div">
             Command Menu : {data.nodeID}
@@ -384,13 +383,13 @@ class Canvas extends Component {
           </div>
         </div>
       );
-    } else if (scale.NodeMenu === false) {
-      commandbox = null;
+    } else if (scale.nodeMenu === false) {
+      commandBox = null;
     }
-    let relationbox;
+    let relationBox;
 
-    if (scale.EdgeMenu === true) {
-      relationbox = (
+    if (scale.edgeMenu === true) {
+      relationBox = (
         <div id="relationMenu-div">
           Relationship Menu :
           {/* {this.state.relationID} */}
@@ -455,14 +454,14 @@ class Canvas extends Component {
                   </Modal> */}
         </div>
       );
-    } else if (scale.EdgeMenu === false) {
-      relationbox = null;
+    } else if (scale.edgeMenu === false) {
+      relationBox = null;
     }
 
     return (
       <div className="Canvas" align="center">
-        {commandbox}
-        {relationbox}
+        {commandBox}
+        {relationBox}
         {/*console.log("NodeID :"+data.nodeID)*/}
         <Graph
           graph={state.graphCanvas}
@@ -485,29 +484,29 @@ class Canvas extends Component {
               // }
 
               this.handleNodeID(event.nodes);
-              this.props.ShowNodeMenu();
-              this.props.HideEdgeMenu();
+              this.props.showNodeMenuActionCreator();
+              this.props.hideEdgeMenuActionCreator();
               this.handleGetNodeName();
               this.handleNodeClass();
               // this.getCreateDate();
             }.bind(this),
             deselectNode: function(event) {
-              console.log(event), this.props.HideNodeMenu();
+              this.props.hideNodeMenuActionCreator();
               // this.handleAlertFalse();
               // this.toggleCreateRAlertmsgFalse();
             }.bind(this),
 
             selectEdge: function(event) {
-              this.handlerelationID(event.edges);
-              this.getinRelationNode();
-              this.getoutRelationNode();
-              this.props.ShowEdgeMenu();
-              this.props.HideNodeMenu();
+              this.handleRelationID(event.edges);
+              this.getInRelationNode();
+              this.getOutRelationNode();
+              this.props.showEdgeMenuActionCreator();
+              this.props.hideNodeMenuActionCreator();
               // this.setDisplayEdge();
             }.bind(this),
             deselectEdge: function(event) {
               // this.toggleRelationMenu();
-              this.props.HideEdgeMenu();
+              this.props.hideEdgeMenuActionCreator();
 
               // this.setHideEdge();
               // this.setHideprop();
