@@ -1,4 +1,3 @@
-
 const graphSetting = {
   graphCanvas: {
     nodes: [
@@ -73,7 +72,7 @@ const graphCanvasReducer = (state = graphSetting, action) => {
     case "ADD_NODE_ACTION":
       const newGraphNodeCanvas = state.graphCanvas.nodes.slice();
       const newGraphEdgeCanvas = state.graphCanvas.edges.slice();
-      console.log(action)
+      console.log(action);
       for (let ele in action.payload) {
         if (
           JSON.stringify(newGraphNodeCanvas).includes(
@@ -83,14 +82,13 @@ const graphCanvasReducer = (state = graphSetting, action) => {
           newGraphNodeCanvas.push(action.payload[ele]);
         }
       }
-      console.log(newGraphNodeCanvas)
+      console.log(newGraphNodeCanvas);
       return {
         ...state,
         graphCanvas: {
           nodes: newGraphNodeCanvas,
           edges: newGraphEdgeCanvas
         }
-        
       };
       break;
     case "CLEAR_CANVAS":
@@ -171,29 +169,29 @@ const graphCanvasReducer = (state = graphSetting, action) => {
           return {
             ...state,
             options: { ...state.options, groups: updateGroup }
-          }; break;
+          };
         case "B":
-          updateSize = { ...externalOption.B, size: action.size };
+        updateColor = { ...externalOption.B, color: { background: action.color, border: action.color } };
           updateGroup = { ...externalOption, B: updateSize };
           return {
             ...state,
             options: { ...state.options, groups: updateGroup }
-          }; break;
+          };
         case "C":
-          updateSize = { ...externalOption.C, size: action.size };
-          updateGroup = { ...externalOption, C: updateSize };
+        updateColor = { ...externalOption.C, color: { background: action.color, border: action.color }  };
+          updateGroup = { ...externalOption, C: updateColor };
           return {
             ...state,
             options: { ...state.options, groups: updateGroup }
-          }; break;
+          };
         case "D":
-          updateSize = { ...externalOption.D, size: action.size };
-          updateGroup = { ...externalOption, D: updateSize };
+        updateColor = { ...externalOption.D, color: { background: action.color, border: action.color }  };
+          updateGroup = { ...externalOption, D: updateColor };
           return {
             ...state,
             options: { ...state.options, groups: updateGroup }
-          }; break;
-      } 
+          };
+      }
     case "UPDATE_GRAPH":
       return {
         ...state,
