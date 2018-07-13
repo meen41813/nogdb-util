@@ -167,29 +167,29 @@ const graphCanvasReducer = (state = graphSetting, action) => {
           return {
             ...state,
             options: { ...state.options, groups: updateGroup }
-          };
+          }; break;
         case "B":
           updateSize = { ...externalOption.B, size: action.size };
           updateGroup = { ...externalOption, B: updateSize };
           return {
             ...state,
             options: { ...state.options, groups: updateGroup }
-          };
+          }; break;
         case "C":
           updateSize = { ...externalOption.C, size: action.size };
           updateGroup = { ...externalOption, C: updateSize };
           return {
             ...state,
             options: { ...state.options, groups: updateGroup }
-          };
+          }; break;
         case "D":
           updateSize = { ...externalOption.D, size: action.size };
           updateGroup = { ...externalOption, D: updateSize };
           return {
             ...state,
             options: { ...state.options, groups: updateGroup }
-          };
-      }
+          }; break;
+      } 
     case "UPDATE_GRAPH":
       return {
         ...state,

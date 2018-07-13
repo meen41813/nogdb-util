@@ -14,7 +14,7 @@ import {addNode,clearCanvas,fullscreen,exitFullscreen} from '../actions/mainButt
 import NodePropertyMenu from '../components/nodepropsmenu';
 import EdgePropertyMenu from '../components/edgepropsmenu';
 
-//testhello
+
 const customStyle = {
   content: {
     posittion: "absolute",
@@ -112,24 +112,21 @@ class App extends Component {
       isCreateRelationActive: false,
       isEditRelationActive:false,
       page: 1,
-      
       prevNodeID: " ",
-
       flagisAddtoCanvas: true,
       CreateDate: "",
       isEdgeproperty: false,
       createEdgeMode: false,
-      isAlertShow: false,
-     
+      isAlertShow: false, 
       NodeLabel: " ",
-      isCreateRAlertShow:false
+      isCreateRAlertShow:false,
+     
     };
     this.handleAddNodebutton = this.handleAddNodebutton.bind(this);
     this.handleNextPage = this.handleNextPage.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleEditNodeName = this.handleEditNodeName.bind(this);
-     this.handleClearCanvas = this.handleClearCanvas.bind(this);
-      this.handleFullscreen = this.handleFullscreen.bind(this);
+    this.handleClearCanvas = this.handleClearCanvas.bind(this);
        // this.handleSrcChange = this.handleSrcChange.bind(this);
     // this.handleDscChange = this.handleDscChange.bind(this);
       // this.AddEdgeToCanvas = this.AddEdgeToCanvas.bind(this);
@@ -241,42 +238,37 @@ class App extends Component {
         this.props.onClearCanvas(nullgraph)
         this.setState({ graph: { nodes: [], edges: [] } });
       }
-  handleFullscreen = () => {
-    $("#Canvas").addClass("CanvasFullScreen");
-    this.setState(prevState => ({
-      isFullscreen: !prevState.isFullscreen
-    }));
-  };
+ 
   render() {
     const {graph,scale,data} = this.props;
     let pheader;
-    if (scale.isFullscreen === true) {
+    if (scale.isFullScreen === true) {
       pheader = null;
     } else {
        pheader = <NogDBTitle/>
     }
     let consolebox;
-    if (scale.isFullscreen === true) {
+    if (scale.isFullScreen === true) {
       consolebox = null;
     } else {
       consolebox = <Console/>
     }
     let historybox;
-    if (scale.isFullscreen === true){
+    if (scale.isFullScreen === true){
       historybox = null;
     } else {
       historybox = <History/>
     }
     let Nodetabbars;
-    if (scale.NodeMenu === true ){
+    if (scale.nodeMenu === true ){
       Nodetabbars = <NodePropertyMenu/>
-    } else if (scale.NodeMenu ===false){
+    } else if (scale.nodeMenu ===false){
       Nodetabbars = null;
     }
     let Edgetabbars;
-    if (scale.EdgeMenu === true){
+    if (scale.edgeMenu === true){
       Edgetabbars = <EdgePropertyMenu/>
-    }else if (scale.EdgeMenu === false){
+    }else if (scale.edgeMenu === false){
       Edgetabbars = null;
     }
     
@@ -354,7 +346,7 @@ class App extends Component {
             </div>
           )}
         </Modal>
-        { scale.isFullscreen === false ? (
+        { scale.isFullScreen === false ? (
         <button id="FullScreen-button" onClick={this.props.onSetFullSceen}>
           Full screen
         </button>
