@@ -7,8 +7,8 @@ import {TabContent,TabPane,Nav,NavItem,NavLink,Card,Button,CardTitle,CardText,Ro
 import classnames from "classnames";
 import NogDBTitle from '../components/Title';
 import Console from '../components/Console';
-import Canvas from '../components/Canvas';
-import History from '../components/History';
+import Canvas from '../components/canvas';
+import History from '../components/history';
 import { connect} from 'react-redux';
 import {addNodeToCanvas,addNodeToDatabase,clearCanvas,fullscreen,exitFullscreen} from '../actions/mainButtonAction'
 import NodePropertyMenu from '../components/NodePropsMenu';
