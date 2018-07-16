@@ -1,23 +1,10 @@
 const graphSetting = {
   graphCanvas: {
     nodes: [
-      { id: "1", label: "Bill", group: "A", },
-      { id: "2", label: "Queen", group: "A" },
-      { id: "3", label: "King", group: "A" },
-      { id: "4", label: "Jack", group: "A", title: "Popup show!!" },
-      { id: "5", label: "Barry", group: "A" }
+      
     ],
     edges: [
-      {
-        id: "1",
-        from: "1",
-        to: "2",
-        label: "AAA",
-        color: { color: "Crimson" }
-      },
-      { from: "1", to: "4", label: "CCC", color: { color: "Magenta" } },
-      { from: "3", to: "5", label: "BBB", color: { color: "Navy" } },
-      { from: "4", to: "2", label: "DDD", color: { color: "YellowGreen" } }
+      
     ]
   },
   options: {
@@ -61,7 +48,9 @@ const graphSetting = {
       enabled: true
     }
   },
-  respondFromConsole: []
+  respondFromConsole: [],
+  ID:[],
+  name:[]
     
 
 };
@@ -223,12 +212,26 @@ const graphCanvasReducer = (state = graphSetting, action) => {
       };break;
 
     case  'CONSOLE_RESPOND':
+    let id = []
+    let name = []
+    let node = []
+    let edge= []
+      for(let i = 0; i < action.payload.length;i++){
+        id.push(action.payload[i].descriptor.rid)
+        name.push(action.payload[i].record.name)
+        node[i] = {id:JSON.stringify(id[i]),label:name[i]}
+      }
+     
+      console.log(node)
       return {
         ...state,
-        respondFromConsole : action.payload
+        graphCanvas:{
+          edges: [],
+          nodes:node,
+          
         
         }
-      
+      }
       break;
 
     default:
