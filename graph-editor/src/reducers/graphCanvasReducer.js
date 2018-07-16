@@ -1,7 +1,7 @@
 const graphSetting = {
   graphCanvas: {
     nodes: [
-      { id: "1", label: "Bill", group: "A" },
+      { id: "1", label: "Bill", group: "A", },
       { id: "2", label: "Queen", group: "A" },
       { id: "3", label: "King", group: "A" },
       { id: "4", label: "Jack", group: "A", title: "Popup show!!" },
@@ -60,7 +60,10 @@ const graphSetting = {
     manipulation: {
       enabled: true
     }
-  }
+  },
+  respondFromConsole: []
+    
+
 };
 
 const graphCanvasReducer = (state = graphSetting, action) => {
@@ -74,7 +77,7 @@ const graphCanvasReducer = (state = graphSetting, action) => {
     case "ADD_NODE_ACTION":
       //const newGraphNodeCanvas = state.graphCanvas.nodes.slice();
       //const newGraphEdgeCanvas = state.graphCanvas.edges.slice();
-      console.log(action)
+      console.log(action.payload)
       for (let ele in action.payload) {
         if (
           JSON.stringify(backupNode).includes(
@@ -217,7 +220,16 @@ const graphCanvasReducer = (state = graphSetting, action) => {
           nodes: action.payload1,
           edges: action.payload2
         }
-      };
+      };break;
+
+    case  'CONSOLE_RESPOND':
+      return {
+        ...state,
+        respondFromConsole : action.payload
+        
+        }
+      
+      break;
 
     default:
       state = {

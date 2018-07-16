@@ -1,6 +1,6 @@
 import { all, takeEvery, call, put } from 'redux-saga/effects'
 import { get, post } from '../services/webService'
-import { addNode,addNodeToDBError } from '../actions/mainButtonAction';
+import { addRespondFromConsole } from '../actions/databaseAction';
 
 
 function* rootSaga() {
@@ -49,8 +49,9 @@ function* addConsoletoDB(sqlStr) {
         {
             "sql": sqlStr.payload
         });
-        // yield put(addNode(newNode));
-        console.log(resp);
+
+        yield put(addRespondFromConsole(resp.data.data));
+        //  console.log(resp);
     } catch(error) {        
        console.log(error)
     }
