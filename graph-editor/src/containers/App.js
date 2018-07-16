@@ -6,9 +6,9 @@ import { Alert } from "reactstrap";
 import {TabContent,TabPane,Nav,NavItem,NavLink,Card,Button,CardTitle,CardText,Row,Col,Container} from "reactstrap";
 import classnames from "classnames";
 import NogDBTitle from '../components/Title';
-import Console from '../components/Console';
-import Canvas from '../components/canvas';
-import History from '../components/history';
+import Console from '../components/ConsoleBox';
+import Canvas from '../components/Canvas';
+import History from '../components/History';
 import { connect} from 'react-redux';
 import {addNodeToCanvas,addNodeToDatabase,clearCanvas,fullscreen,exitFullscreen} from '../actions/mainButtonAction'
 import NodePropertyMenu from '../components/NodePropsMenu';
